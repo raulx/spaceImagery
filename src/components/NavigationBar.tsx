@@ -6,8 +6,8 @@ import {
   NavbarMenuToggle,
   NavbarMenu,
   NavbarMenuItem,
-  Link,
 } from "@nextui-org/react";
+import { Link } from "react-router-dom";
 import Logo from "./Logo";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
@@ -71,7 +71,7 @@ function NavigationBar() {
           return (
             <NavbarItem key={page.name}>
               <Link
-                href={page.path}
+                to={page.path}
                 className={`uppercase text-black ${
                   activeLink === page.name && "font-bold"
                 }`}
@@ -100,8 +100,7 @@ function NavigationBar() {
                 className={`w-full flex justify-center items-center uppercase my-4 text-black ${
                   activeLink === page.name && "font-bold"
                 }`}
-                href={page.path}
-                size="lg"
+                to={page.path}
               >
                 {page.name}
               </Link>
