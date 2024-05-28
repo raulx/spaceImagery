@@ -1,5 +1,6 @@
 import { Button, Divider } from "@nextui-org/react";
 import NavigationBar from "../components/NavigationBar";
+import { Link } from "react-router-dom";
 import { Image } from "@nextui-org/react";
 
 import Slider from "react-slick";
@@ -24,6 +25,8 @@ function HomePage() {
       content: "This is the content for slide 1",
       imageUrl:
         "https://res.cloudinary.com/dj5yf27lr/image/upload/v1716913168/spaceImagery/iycnfg91524h1uekmvr5.jpg",
+      imageUrlPhone:
+        "https://res.cloudinary.com/dj5yf27lr/image/upload/v1716915679/spaceImagery/mobileScreen/n8kcm8dvyu2dzayndvzq.jpg",
     },
     {
       id: 2,
@@ -31,6 +34,8 @@ function HomePage() {
       content: "This is the content for slide 2",
       imageUrl:
         "https://res.cloudinary.com/dj5yf27lr/image/upload/v1716913168/spaceImagery/vx3yj3leseopshszhkfb.jpg",
+      imageUrlPhone:
+        "https://res.cloudinary.com/dj5yf27lr/image/upload/v1716915679/spaceImagery/mobileScreen/k2dxglblpjfkytx9nnmt.jpg",
     },
     {
       id: 3,
@@ -38,6 +43,8 @@ function HomePage() {
       content: "This is the content for slide 3",
       imageUrl:
         "https://res.cloudinary.com/dj5yf27lr/image/upload/v1716913168/spaceImagery/zsfvkeueugpl9lvvhism.jpg",
+      imageUrlPhone:
+        "https://res.cloudinary.com/dj5yf27lr/image/upload/v1716915680/spaceImagery/mobileScreen/jiihxc01o0ubragzdpef.jpg",
     },
     {
       id: 4,
@@ -45,6 +52,8 @@ function HomePage() {
       content: "This is the content for slide 4",
       imageUrl:
         "https://res.cloudinary.com/dj5yf27lr/image/upload/v1716913168/spaceImagery/kxxt2x760nbc6jrpzmpc.jpg",
+      imageUrlPhone:
+        "https://res.cloudinary.com/dj5yf27lr/image/upload/v1716915679/spaceImagery/mobileScreen/sabznvwp3zbgx7a6uhte.jpg",
     },
   ];
   return (
@@ -61,9 +70,11 @@ function HomePage() {
               Explore Nasa’s Official Images and Videos Data, collecting on
               different missions, search any topic and get media content .
             </p>
-            <Button className="w-1/5 mx-auto  bg-white border font-bold">
-              Explore
-            </Button>
+            <Link to={"/gallery"}>
+              <Button className="w-1/5 mx-auto  bg-white border font-bold">
+                Explore
+              </Button>
+            </Link>
           </div>
           <div className="w-full sm:order-2 order-1 sm:pt-4 sm:pr-4">
             <Slider {...settings}>
@@ -71,6 +82,7 @@ function HomePage() {
                 <Image
                   key={slide.id}
                   src={slide.imageUrl}
+                  srcSet={`${slide.imageUrl} 800w,${slide.imageUrlPhone} 400w`}
                   width={800}
                   height={400}
                 />

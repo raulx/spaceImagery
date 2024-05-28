@@ -55,7 +55,7 @@ function NavigationBar() {
       onMenuOpenChange={setIsMenuOpen}
       isMenuOpen={isMenuOpen}
       maxWidth="xl"
-      className="sm:py-2 bg-[#FFF6F6]"
+      className="sm:py-4 py-2 bg-[#FFF6F6]"
     >
       <NavbarContent className="hidden sm:block">
         <NavbarBrand>
