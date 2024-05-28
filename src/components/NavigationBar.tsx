@@ -61,7 +61,7 @@ function NavigationBar() {
         <NavbarBrand>
           <Logo />
 
-          <span className=" font-KronaOne text-sm font-bold uppercase tracking-widest mx-6 p-4 bg-white rounded-full">
+          <span className="font-KronaOne text-sm font-bold uppercase tracking-widest mx-6 p-4 bg-white rounded-full">
             Space Imagery
           </span>
         </NavbarBrand>
@@ -97,7 +97,7 @@ function NavigationBar() {
           {pages.map((page) => {
             return (
               <Link
-                className={`w-full flex justify-center items-center uppercase my-4 text-black ${
+                className={`w-full flex text-sm justify-center items-center uppercase my-4 text-black ${
                   activeLink === page.name && "font-bold"
                 }`}
                 to={page.path}

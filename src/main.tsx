@@ -1,17 +1,31 @@
+/* eslint-disable react-refresh/only-export-components */
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
+import { lazy, Suspense } from "react";
 import "./index.css";
 import { NextUIProvider } from "@nextui-org/react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import HomePage from "./pages/HomePage.tsx";
-import MarsImagesPage from "./pages/MarsImagesPage.tsx";
-import GalleryPage from "./pages/GalleryPage.tsx";
+import { Spinner } from "@nextui-org/react";
+const App = lazy(() => import("./App.tsx"));
+const HomePage = lazy(() => import("./pages/HomePage.tsx"));
+const MarsImagesPage = lazy(() => import("./pages/MarsImagesPage.tsx"));
+const GalleryPage = lazy(() => import("./pages/GalleryPage.tsx"));
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+
+    element: (
+      <Suspense
+        fallback={
+          <div className="w-screen h-screen flex justify-center items-center">
+            <Spinner size="lg" />
+          </div>
+        }
+      >
+        <App />
+      </Suspense>
+    ),
     children: [
       { index: true, element: <HomePage /> },
       { path: "/mars", element: <MarsImagesPage /> },
