@@ -3,8 +3,10 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { lazy, Suspense } from "react";
 import "./index.css";
+
 import { NextUIProvider } from "@nextui-org/react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
 import { Spinner } from "@nextui-org/react";
 const App = lazy(() => import("./App.tsx"));
 const HomePage = lazy(() => import("./pages/HomePage.tsx"));

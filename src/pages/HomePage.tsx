@@ -2,18 +2,62 @@ import { Button, Divider } from "@nextui-org/react";
 import NavigationBar from "../components/NavigationBar";
 import { Image } from "@nextui-org/react";
 
+import Slider from "react-slick";
+
 function HomePage() {
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 5000,
+    arrows: false,
+  };
+  // const videoLink =
+  //   "https://images-assets.nasa.gov/video/T803303_A_AS-503-APOLLO-8-CREW-DEPARTING-MSOB-ENROUTE-TO-PAD-39A/T803303_A_AS-503-APOLLO-8-CREW-DEPARTING-MSOB-ENROUTE-TO-PAD-39A~preview.mp4";
+  const slidesData = [
+    {
+      id: 1,
+      title: "Slide 1",
+      content: "This is the content for slide 1",
+      imageUrl:
+        "https://res.cloudinary.com/dj5yf27lr/image/upload/v1716913168/spaceImagery/iycnfg91524h1uekmvr5.jpg",
+    },
+    {
+      id: 2,
+      title: "Slide 2",
+      content: "This is the content for slide 2",
+      imageUrl:
+        "https://res.cloudinary.com/dj5yf27lr/image/upload/v1716913168/spaceImagery/vx3yj3leseopshszhkfb.jpg",
+    },
+    {
+      id: 3,
+      title: "Slide 3",
+      content: "This is the content for slide 3",
+      imageUrl:
+        "https://res.cloudinary.com/dj5yf27lr/image/upload/v1716913168/spaceImagery/zsfvkeueugpl9lvvhism.jpg",
+    },
+    {
+      id: 4,
+      title: "Slide 4",
+      content: "This is the content for slide 4",
+      imageUrl:
+        "https://res.cloudinary.com/dj5yf27lr/image/upload/v1716913168/spaceImagery/kxxt2x760nbc6jrpzmpc.jpg",
+    },
+  ];
   return (
     <>
       <NavigationBar />
 
-      <main className="sm:w-11/12 mx-auto py-10 flex flex-col gap-10 ">
-        <section className="w-full bg-[#F6F6FF] rounded-lg grid sm:grid-cols-2 grid-cols-1 gap-4 g min-h-96 shadow">
-          <div className="flex flex-col sm:order-1 order-2  py-4 text-center gap-10 justify-center">
-            <h1 className="font-KneWave text-2xl tracking-widest text-gray-700 font-bold uppercase">
+      <main className="sm:w-11/12 mx-auto py-6 flex flex-col gap-10 ">
+        <section className="w-full bg-[#F6F6FF] rounded-lg grid sm:grid-cols-2 grid-cols-1 gap-4 min-h-96 shadow">
+          <div className="flex flex-col sm:order-1 order-2  py-4 text-center gap-10 justify-center border-r-1">
+            <h1 className="font-KneWave sm:text-xl sm:mt-0 mt-4 tracking-widest text-gray-700 font-bold uppercase">
               Explore the space with nasa
             </h1>
-            <p className="w-4/5 mx-auto font-bold text-lg text-gray-500 tracking-widest">
+            <p className="w-4/5 mx-auto font-bold  text-gray-500 tracking-widest">
               Explore Nasa’s Official Images and Videos Data, collecting on
               different missions, search any topic and get media content .
             </p>
@@ -21,14 +65,17 @@ function HomePage() {
               Explore
             </Button>
           </div>
-          <div className="flex justify-center items-center sm:order-2 order-1">
-            <div className="flex justify-center  bg-gray-300 items-center">
-              <Image
-                src="https://picsum.photos/400/300"
-                width={400}
-                height={300}
-              />
-            </div>
+          <div className="w-full sm:order-2 order-1 sm:pt-4 sm:pr-4">
+            <Slider {...settings}>
+              {slidesData.map((slide) => (
+                <Image
+                  key={slide.id}
+                  src={slide.imageUrl}
+                  width={800}
+                  height={400}
+                />
+              ))}
+            </Slider>
           </div>
         </section>
         <Divider />
