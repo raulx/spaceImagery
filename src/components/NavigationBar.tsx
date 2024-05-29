@@ -49,6 +49,7 @@ function NavigationBar() {
         break;
     }
   }, [location]);
+
   return (
     <Navbar
       isBordered={true}
@@ -93,7 +94,7 @@ function NavigationBar() {
       </NavbarContent>
 
       <NavbarMenu>
-        <NavbarMenuItem className="bg-[#FFF6F6]  border-2 rounded-lg">
+        <NavbarMenuItem className="bg-[#FFF6F6] my-4  border-2 rounded-lg">
           {pages.map((page) => {
             return (
               <Link
