@@ -82,7 +82,7 @@ function HomePage() {
                 <Image
                   key={slide.id}
                   src={slide.imageUrl}
-                  srcSet={`${slide.imageUrl} 800w,${slide.imageUrlPhone} 400w`}
+                  srcSet={`${slide.imageUrl} 1600w,${slide.imageUrlPhone} 800w`}
                   width={800}
                   height={400}
                 />
