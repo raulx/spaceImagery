@@ -101,6 +101,7 @@ function NavigationBar() {
                 className={`w-full flex text-sm justify-center items-center uppercase my-4 text-black ${
                   activeLink === page.name && "font-bold"
                 }`}
+                key={page.name}
                 to={page.path}
               >
                 {page.name}
