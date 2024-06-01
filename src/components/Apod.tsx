@@ -2,9 +2,10 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Image } from "@nextui-org/react";
+import { Button, Image } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import { Skeleton } from "@nextui-org/react";
+import { FaExpandAlt } from "react-icons/fa";
 import {
   AppDispatch,
   RootState,
@@ -47,9 +48,10 @@ function Apod() {
   let content;
 
   const handleOpenFullImage = (url: string) => {
-    // Window name and specs (optional)
-    const windowName = "_blank"; // '_blank' opens in a new tab/window
-    const windowFeatures = "width=800,height=600,resizable,scrollbars";
+    const windowName = "hd";
+    const width = window.screen.width;
+    const height = window.screen.height;
+    const windowFeatures = `width=${width},height=${height},resizable=yes,scrollbars=yes`;
 
     // Open a new window
     window.open(url, windowName, windowFeatures);
@@ -66,13 +68,16 @@ function Apod() {
       <section className="w-full min-h-96  bg-[#353564] rounded-lg grid sm:grid-cols-2 grid-cols-1 gap-8 sm:px-4 px-2 py-6">
         <div className="col-span-1 relative">
           <Image src={data.url} />
-          <div
-            className="h-24 w-24 bg-green-800 z-10 rounded-2xl absolute top-2 right-2"
-            onClick={() => handleOpenFullImage(data.hdurl)}
-          ></div>
+          <Button
+            isIconOnly
+            className="z-10 absolute top-2 right-2 opacity-50"
+            onPress={() => handleOpenFullImage(data.hdurl)}
+          >
+            <FaExpandAlt />
+          </Button>
         </div>
         <div className="col-span-1 text-white">
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 h-full justify-evenly">
             <h1 className="sm:text-2xl text-xl text-center leading-relaxed uppercase font-KronaOne tracking-wide">
               {data.title}
             </h1>
@@ -81,9 +86,11 @@ function Apod() {
             </p>
             <div className="my-4 flex justify-between px-4">
               <span className="text-sm text-gray-200">Date: {data.date}</span>
-              <span className=" font-KneWave text-gray-200">
-                &copy; {data.copyright}
-              </span>
+              {data.copyright && (
+                <span className=" font-KneWave text-gray-200">
+                  &copy; {data.copyright}
+                </span>
+              )}
             </div>
           </div>
         </div>
