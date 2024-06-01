@@ -10,7 +10,7 @@ export default function Hero() {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 5000,
+    autoplaySpeed: 3000,
     arrows: false,
   };
   // const videoLink =
@@ -56,7 +56,7 @@ export default function Hero() {
   return (
     <section className="w-full bg-[#F6F6FF] rounded-lg grid sm:grid-cols-2 grid-cols-1 gap-4 min-h-96 shadow">
       <div className="flex flex-col sm:order-1 order-2  py-4 text-center gap-10 justify-center border-r-1">
-        <h1 className="font-KneWave sm:text-xl sm:mt-0 mt-4 tracking-widest text-gray-700 font-bold uppercase">
+        <h1 className="font-KronaOne sm:text-xl sm:mt-0 mt-4 tracking-widest text-gray-700 font-bold uppercase">
           Explore the space with nasa
         </h1>
         <p className="w-4/5 mx-auto font-bold  text-gray-500 tracking-widest">
@@ -69,7 +69,7 @@ export default function Hero() {
           </Button>
         </Link>
       </div>
-      <div className="w-full sm:order-2 order-1 sm:pt-4 sm:pr-4">
+      <div className="w-full sm:order-2 order-1 sm:pt-4 p-2 sm:pr-4">
         <Slider {...settings}>
           {slidesData.map((slide) => (
             <Image
