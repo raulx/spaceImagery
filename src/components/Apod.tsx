@@ -6,6 +6,7 @@ import { Button, Image } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import { Skeleton } from "@nextui-org/react";
 import { FaExpandAlt } from "react-icons/fa";
+import ReactPlayer from "react-player/lazy";
 import {
   AppDispatch,
   RootState,
@@ -66,15 +67,29 @@ function Apod() {
   } else if (data) {
     content = (
       <section className="w-full min-h-96  bg-[#353564] rounded-lg grid sm:grid-cols-2 grid-cols-1 gap-8 sm:px-4 px-2 py-6">
-        <div className="col-span-1 relative">
-          <Image src={data.url} />
-          <Button
-            isIconOnly
-            className="z-10 absolute top-2 right-2 opacity-50"
-            onPress={() => handleOpenFullImage(data.hdurl)}
-          >
-            <FaExpandAlt />
-          </Button>
+        <div className="col-span-1 relative ">
+          {data.media_type === "video" ? (
+            <div className="relative sm:w-full sm:h-full w-[360px] h-[360px] mx-auto">
+              <ReactPlayer
+                url={data.url}
+                controls={true}
+                className="absolute top-0 left-0"
+                height="100%"
+                width="100%"
+              />
+            </div>
+          ) : (
+            <>
+              <Image src={data.url} />
+              <Button
+                isIconOnly
+                className="z-10 absolute top-2 right-2 opacity-50"
+                onPress={() => handleOpenFullImage(data.hdurl)}
+              >
+                <FaExpandAlt />
+              </Button>
+            </>
+          )}
         </div>
         <div className="col-span-1 text-white">
           <div className="flex flex-col gap-4 h-full justify-evenly">
