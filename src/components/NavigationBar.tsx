@@ -22,7 +22,6 @@ function NavigationBar() {
       name: "home",
       path: "/",
     },
-    { name: "apod", path: "/#apod" },
 
     { name: "mars", path: "/mars" },
     { name: "gallery", path: "/gallery" },
@@ -31,9 +30,6 @@ function NavigationBar() {
   useEffect(() => {
     // Set active link based on current route
     switch (location.pathname) {
-      case "/#apod":
-        setActiveLink("apod");
-        break;
       case "/":
         setActiveLink("home");
         break;

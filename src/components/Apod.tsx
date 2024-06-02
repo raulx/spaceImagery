@@ -73,11 +73,6 @@ function Apod() {
               <ReactPlayer
                 url={data.url}
                 controls={true}
-                fallback={
-                  <div className=" text-2xl font-bold text-white">
-                    Loading Image
-                  </div>
-                }
                 className="absolute top-0 left-0"
                 height="100%"
                 width="100%"

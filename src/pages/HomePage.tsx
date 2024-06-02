@@ -4,6 +4,7 @@ import Hero from "../components/Hero";
 import Apod from "../components/Apod";
 import Footer from "../components/Footer";
 import { Button } from "@nextui-org/react";
+import { Link } from "react-router-dom";
 
 const marsImages = [
   {
@@ -58,9 +59,11 @@ function HomePage() {
               );
             })}
           </div>
-          <Button className="bg-white border font-bold self-center my-4">
-            Explore More
-          </Button>
+          <Link to={"/mars"} className="my-4 self-center ">
+            <Button className="bg-white font-bold border-2 rounded-lg">
+              Explore More
+            </Button>
+          </Link>
         </section>
       </main>
       <Footer />
