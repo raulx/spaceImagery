@@ -66,13 +66,18 @@ function Apod() {
     );
   } else if (data) {
     content = (
-      <section className="w-full min-h-96  bg-[#353564] rounded-lg grid sm:grid-cols-2 grid-cols-1 gap-8 sm:px-4 px-2 py-6">
+      <section className="w-full sm:min-h-96 bg-[#353564] rounded-lg grid sm:grid-cols-2 grid-cols-1 gap-8 sm:px-4 px-2 py-6">
         <div className="col-span-1 relative ">
           {data.media_type === "video" ? (
-            <div className="relative sm:w-full sm:h-full w-[360px] h-[360px] mx-auto">
+            <div className="w-full mx-auto h-96 sm:h-auto">
               <ReactPlayer
                 url={data.url}
                 controls={true}
+                fallback={
+                  <div className=" text-2xl font-bold text-white">
+                    Loading Image
+                  </div>
+                }
                 className="absolute top-0 left-0"
                 height="100%"
                 width="100%"
