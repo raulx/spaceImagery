@@ -109,7 +109,7 @@ function MarsImagesPage() {
       {data.isLoading ? (
         <div>loading data...</div>
       ) : (
-        <div className="flex flex-wrap w-full justify-center gap-6 p-4">
+        <div className="flex flex-wrap w-full justify-center gap-10 p-4">
           {data.data.photos.map((d) => {
             return (
               <div key={d.id} className="hover:cursor-zoom-in">
@@ -117,7 +117,7 @@ function MarsImagesPage() {
                   <TransformComponent>
                     <Image
                       removeWrapper
-                      className="w-[400px] h-[400px] object-contain"
+                      className="w-[400px] h-[400px] bg-black object-contain"
                       src={d.img_src}
                     />
                   </TransformComponent>
