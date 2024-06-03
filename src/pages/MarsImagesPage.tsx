@@ -1,6 +1,6 @@
 import { useState } from "react";
 import NavigationBar from "../components/NavigationBar";
-
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import {
   Card,
   CardBody,
@@ -26,7 +26,7 @@ function MarsImagesPage() {
   const [sol, setSol] = useState<string>("");
 
   const handleSearch = async () => {
-    const requestUrl = `https://api.nasa.gov/mars-photos/api/v1/rovers/${roverType}/photos?api_key=${apiKey}&sol=${sol}`;
+    const requestUrl = `https://api.nasa.gov/mars-photos/api/v1/rovers/${roverType}/photos?api_key=${apiKey}&sol=${sol}&page=1`;
 
     try {
       setData((prevValue) => {
@@ -49,9 +49,13 @@ function MarsImagesPage() {
     <>
       <NavigationBar />
       <section id="mars-search-box">
-        <Card className=" max-w-[400px] mx-auto my-2" shadow="sm" radius="sm">
+        <Card
+          className="sm:max-w-[400px] w-11/12 border mx-auto my-2"
+          shadow="sm"
+          radius="sm"
+        >
           <CardBody className="flex flex-col gap-4">
-            <div className="flex justify-between border rounded-2xl p-4 ">
+            <div className="flex justify-between border rounded-2xl p-4 bg-slate-50 ">
               <div className=" self-center">Choose Rover:</div>
               <div className="flex justify-center items-center gap-6">
                 <div className="flex flex-col  items-center gap-4">
@@ -63,7 +67,7 @@ function MarsImagesPage() {
                     id="curiosity"
                     name="rover-type"
                     onChange={(e) => setRoverType(e.target.value)}
-                    className="w-8 h-8 text-gray-500 bg-green-400"
+                    className="w-6 h-6 text-gray-500 bg-green-400"
                   />
                 </div>
                 <div className="flex flex-col justify-center items-center gap-4">
@@ -74,7 +78,7 @@ function MarsImagesPage() {
                     id="perseverance"
                     name="rover-type"
                     onChange={(e) => setRoverType(e.target.value)}
-                    className="w-8 h-8"
+                    className="w-6 h-6"
                   />
                 </div>
               </div>
@@ -90,24 +94,36 @@ function MarsImagesPage() {
                   color="secondary"
                 />
               </div>
+              <Button
+                className="w-1/4 mx-auto"
+                color="secondary"
+                onClick={handleSearch}
+              >
+                Search
+              </Button>
             </div>
-            <Button
-              className="w-1/4 mx-auto"
-              color="secondary"
-              onClick={handleSearch}
-            >
-              Search
-            </Button>
           </CardBody>
         </Card>
       </section>
-      <Divider className="my-4" />
+      <Divider className="my-6" />
       {data.isLoading ? (
         <div>loading data...</div>
       ) : (
-        <div className="flex flex-wrap w-full justify-between gap-4">
+        <div className="flex flex-wrap w-full justify-center gap-6 p-4">
           {data.data.photos.map((d) => {
-            return <Image src={d.img_src} key={d.id} width={300} />;
+            return (
+              <div key={d.id} className="hover:cursor-zoom-in">
+                <TransformWrapper>
+                  <TransformComponent>
+                    <Image
+                      removeWrapper
+                      className="w-[400px] h-[400px] object-contain"
+                      src={d.img_src}
+                    />
+                  </TransformComponent>
+                </TransformWrapper>
+              </div>
+            );
           })}
         </div>
       )}
