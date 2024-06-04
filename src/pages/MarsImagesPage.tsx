@@ -12,10 +12,13 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
+  RadioGroup,
+  Radio,
 } from "@nextui-org/react";
 
 import axios from "axios";
 import { FaQuestion, FaCircleInfo } from "react-icons/fa6";
+import Footer from "../components/Footer";
 
 const apiKey = import.meta.env.VITE_API_KEY;
 
@@ -24,7 +27,22 @@ function MarsImagesPage() {
   const [data, setData] = useState({
     data: {
       photos: [
-        { img_src: "", id: "", sol: "", earth_date: "", camera: { name: "" } },
+        {
+          img_src: "",
+          id: "",
+          sol: "",
+          earth_date: "",
+          camera: { name: "" },
+          rover: {
+            name: "",
+            landing_date: "",
+            launch_date: "",
+            status: "",
+            max_sol: "",
+            max_date: "",
+            total_photos: "",
+          },
+        },
       ],
     },
     isLoading: false,
@@ -40,6 +58,9 @@ function MarsImagesPage() {
           return { ...prevValue, isLoading: true };
         });
         const res = await axios.get(requestUrl);
+        if (res.data.photos.length === 0) {
+          throw new Error("Data is empty");
+        }
         setData((prevValue) => {
           return { ...prevValue, data: res.data, isLoading: false };
         });
@@ -57,39 +78,59 @@ function MarsImagesPage() {
       <NavigationBar />
       <section id="mars-search-box">
         <Card
-          className="sm:max-w-[400px] w-11/12 border mx-auto my-2"
+          className="sm:max-w-[300px] w-11/12 border mx-auto my-2"
           shadow="sm"
           radius="sm"
         >
           <CardBody className="flex flex-col gap-4">
-            <div className="flex justify-between border rounded-2xl p-4 bg-slate-50 ">
-              <div className=" self-center">Choose Rover:</div>
-              <div className="flex justify-center items-center gap-6">
-                <div className="flex flex-col  items-center gap-4">
-                  <label htmlFor="earth">Curiosity</label>
-                  <input
-                    type="radio"
-                    value="curiosity"
-                    defaultChecked
-                    id="curiosity"
-                    name="rover-type"
-                    onChange={(e) => setRoverType(e.target.value)}
-                    className="w-6 h-6 text-gray-500 bg-green-400"
-                  />
+            <div className="border rounded-2xl  p-4  bg-slate-50 relative ">
+              <span className="absolute top-1">
+                <Popover placement="bottom" showArrow>
+                  <PopoverTrigger>
+                    <Button className="bg-transparent" size="sm">
+                      <FaCircleInfo className="text-gray-400 text-lg" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <div className="w-48 p-2 text-gray-600">
+                      <p>Name:{data.data.photos[0].rover.name}</p>
+                      <p>
+                        Landing date:
+                        {data.data.photos[0].rover.landing_date}
+                      </p>
+                      <p>
+                        Launch date:
+                        {data.data.photos[0].rover.launch_date}
+                      </p>
+                      <p>
+                        Status:
+                        {data.data.photos[0].rover.status}
+                      </p>
+                      <p>
+                        Max sol:
+                        {data.data.photos[0].rover.max_sol}
+                      </p>
+                      <p>
+                        Total Photos:
+                        {data.data.photos[0].rover.total_photos}
+                      </p>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              </span>
+              <RadioGroup
+                value={roverType}
+                label="Choose Rover"
+                onValueChange={setRoverType}
+              >
+                <div className="flex items-center gap-6 relative">
+                  <Radio value="curiosity">Curiosity </Radio>
+
+                  <Radio value="perseverance">Perseverance</Radio>
                 </div>
-                <div className="flex flex-col justify-center items-center gap-4">
-                  <label htmlFor="earth">Perseverance</label>
-                  <input
-                    type="radio"
-                    value="perseverance"
-                    id="perseverance"
-                    name="rover-type"
-                    onChange={(e) => setRoverType(e.target.value)}
-                    className="w-6 h-6"
-                  />
-                </div>
-              </div>
+              </RadioGroup>
             </div>
+
             <div className="flex justify-between items-center gap-2">
               <div>
                 <div className="flex items-center">
@@ -164,6 +205,7 @@ function MarsImagesPage() {
             {data.data.photos.length === 0 && <div>No Data found...</div>}
           </div>
         )}
+        <Footer />
       </div>
     </>
   );
