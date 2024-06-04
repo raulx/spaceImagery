@@ -4,7 +4,6 @@ import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import {
   Card,
   CardBody,
-  Tooltip,
   Divider,
   Button,
   Image,
