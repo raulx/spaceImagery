@@ -8,13 +8,12 @@ import {
   Divider,
   Image,
   Input,
+  Spinner,
 } from "@nextui-org/react";
 
 import axios from "axios";
 
 const apiKey = import.meta.env.VITE_API_KEY;
-
-// const baseUrl = `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?api_key=${apiKey}`;
 
 function MarsImagesPage() {
   const [roverType, setRoverType] = useState<string>("curiosity");
@@ -33,7 +32,6 @@ function MarsImagesPage() {
         return { ...prevValue, isLoading: true };
       });
       const res = await axios.get(requestUrl);
-      console.log(res);
       setData((prevValue) => {
         return { ...prevValue, data: res.data, isLoading: false };
       });
@@ -106,27 +104,32 @@ function MarsImagesPage() {
         </Card>
       </section>
       <Divider className="my-6" />
-      {data.isLoading ? (
-        <div>loading data...</div>
-      ) : (
-        <div className="flex flex-wrap w-full justify-center gap-10 p-4">
-          {data.data.photos.map((d) => {
-            return (
-              <div key={d.id} className="hover:cursor-zoom-in">
-                <TransformWrapper>
-                  <TransformComponent>
-                    <Image
-                      removeWrapper
-                      className="w-[400px] h-[400px] bg-black object-contain"
-                      src={d.img_src}
-                    />
-                  </TransformComponent>
-                </TransformWrapper>
-              </div>
-            );
-          })}
-        </div>
-      )}
+      <div className="min-h-96">
+        {data.isLoading ? (
+          <div className="w-screen flex justify-center items-center h-96">
+            <Spinner size="lg" />
+          </div>
+        ) : (
+          <div className="flex flex-wrap w-full justify-center sm:gap-12 gap-16 p-4">
+            {data.data.photos?.map((d) => {
+              return (
+                <div key={d.id} className="hover:cursor-zoom-in">
+                  <TransformWrapper>
+                    <TransformComponent>
+                      <Image
+                        removeWrapper
+                        className="w-[400px] h-[400px] bg-black object-contain"
+                        src={d.img_src}
+                      />
+                    </TransformComponent>
+                  </TransformWrapper>
+                </div>
+              );
+            })}
+            {data.data.photos.length === 0 && <div>No Data found...</div>}
+          </div>
+        )}
+      </div>
     </>
   );
 }
