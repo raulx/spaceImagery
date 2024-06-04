@@ -14,6 +14,7 @@ import {
   PopoverTrigger,
   RadioGroup,
   Radio,
+  Switch,
 } from "@nextui-org/react";
 
 import axios from "axios";
@@ -24,6 +25,7 @@ const apiKey = import.meta.env.VITE_API_KEY;
 
 function MarsImagesPage() {
   const [roverType, setRoverType] = useState<string>("curiosity");
+  const [isLatest, setIslatest] = useState<boolean>(true);
   const [data, setData] = useState({
     data: {
       photos: [
@@ -52,17 +54,34 @@ function MarsImagesPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const requestUrl = `https://api.nasa.gov/mars-photos/api/v1/rovers/${roverType}/photos?api_key=${apiKey}&sol=${sol}&page=1`;
+      let requestUrl = `https://api.nasa.gov/mars-photos/api/v1/rovers/${roverType}/photos?api_key=${apiKey}&sol=${sol}&page=1`;
+
+      if (isLatest) {
+        requestUrl = `https://api.nasa.gov/mars-photos/api/v1/rovers/${roverType}/latest_photos?api_key=${apiKey}&page=1`;
+      }
       try {
         setData((prevValue) => {
           return { ...prevValue, isLoading: true };
         });
         const res = await axios.get(requestUrl);
-        if (res.data.photos.length === 0) {
-          throw new Error("Data is empty");
+        let photos;
+
+        if (res.data.latest_photos) {
+          photos = res.data.latest_photos;
+        } else {
+          if (res.data.photos.length === 0) {
+            throw new Error("Data is empty");
+          } else {
+            photos = res.data.photos;
+          }
         }
+
         setData((prevValue) => {
-          return { ...prevValue, data: res.data, isLoading: false };
+          return {
+            ...prevValue,
+            data: { ...res.data, photos: photos },
+            isLoading: false,
+          };
         });
       } catch (err) {
         console.log(err);
@@ -72,7 +91,7 @@ function MarsImagesPage() {
       }
     };
     fetchData();
-  }, [roverType, sol]);
+  }, [roverType, sol, isLatest]);
   return (
     <>
       <NavigationBar />
@@ -84,7 +103,7 @@ function MarsImagesPage() {
         >
           <CardBody className="flex flex-col gap-4">
             <div className="border rounded-2xl  p-4  bg-slate-50 relative ">
-              <span className="absolute top-1">
+              <span className="absolute right-0 top-1">
                 <Popover placement="bottom" showArrow>
                   <PopoverTrigger>
                     <Button className="bg-transparent" size="sm">
@@ -131,33 +150,41 @@ function MarsImagesPage() {
               </RadioGroup>
             </div>
 
+            <div>
+              <Switch isSelected={isLatest} onValueChange={setIslatest}>
+                Latest
+              </Switch>
+            </div>
+
             <div className="flex justify-between items-center gap-2">
-              <div>
-                <div className="flex items-center">
-                  <span>Martian Sol</span>
-                  <Popover placement="top">
-                    <PopoverTrigger>
-                      <Button className="bg-transparent" size="sm">
-                        <FaQuestion className="text-gray-400" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent>
-                      <div className="w-48 p-2 text-gray-600">
-                        Photos are organized by the sol (Martian rotation or
-                        day) on which they were taken, counting up from the
-                        rover's landing date
-                      </div>
-                    </PopoverContent>
-                  </Popover>
+              {!isLatest && (
+                <div>
+                  <div className="flex items-center">
+                    <span>Martian Sol</span>
+                    <Popover placement="top">
+                      <PopoverTrigger>
+                        <Button className="bg-transparent" size="sm">
+                          <FaQuestion className="text-gray-400" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent>
+                        <div className="w-48 p-2 text-gray-600">
+                          Photos are organized by the sol (Martian rotation or
+                          day) on which they were taken, counting up from the
+                          rover's landing date
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  <Input
+                    type="number"
+                    placeholder="1"
+                    value={sol}
+                    onValueChange={setSol}
+                    color="secondary"
+                  />
                 </div>
-                <Input
-                  type="number"
-                  placeholder="1"
-                  value={sol}
-                  onValueChange={setSol}
-                  color="secondary"
-                />
-              </div>
+              )}
             </div>
           </CardBody>
         </Card>
