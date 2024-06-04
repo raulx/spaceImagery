@@ -1,17 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NavigationBar from "../components/NavigationBar";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import {
   Card,
   CardBody,
-  Button,
+  Tooltip,
   Divider,
+  Button,
   Image,
   Input,
   Spinner,
 } from "@nextui-org/react";
 
 import axios from "axios";
+import { FaQuestion } from "react-icons/fa6";
 
 const apiKey = import.meta.env.VITE_API_KEY;
 
@@ -22,27 +24,28 @@ function MarsImagesPage() {
     isLoading: false,
   });
 
-  const [sol, setSol] = useState<string>("");
+  const [sol, setSol] = useState<string>("1");
 
-  const handleSearch = async () => {
-    const requestUrl = `https://api.nasa.gov/mars-photos/api/v1/rovers/${roverType}/photos?api_key=${apiKey}&sol=${sol}&page=1`;
-
-    try {
-      setData((prevValue) => {
-        return { ...prevValue, isLoading: true };
-      });
-      const res = await axios.get(requestUrl);
-      setData((prevValue) => {
-        return { ...prevValue, data: res.data, isLoading: false };
-      });
-    } catch (err) {
-      console.log(err);
-      setData((prevValue) => {
-        return { ...prevValue, isLoading: false };
-      });
-    }
-  };
-
+  useEffect(() => {
+    const fetchData = async () => {
+      const requestUrl = `https://api.nasa.gov/mars-photos/api/v1/rovers/${roverType}/photos?api_key=${apiKey}&sol=${sol}&page=1`;
+      try {
+        setData((prevValue) => {
+          return { ...prevValue, isLoading: true };
+        });
+        const res = await axios.get(requestUrl);
+        setData((prevValue) => {
+          return { ...prevValue, data: res.data, isLoading: false };
+        });
+      } catch (err) {
+        console.log(err);
+        setData((prevValue) => {
+          return { ...prevValue, isLoading: false };
+        });
+      }
+    };
+    fetchData();
+  }, [roverType, sol]);
   return (
     <>
       <NavigationBar />
@@ -83,22 +86,25 @@ function MarsImagesPage() {
             </div>
             <div className="flex justify-between items-center gap-2">
               <div>
+                <div className="flex items-center">
+                  <span>Martian Sol</span>
+                  <Tooltip
+                    content="Photos are organized by the sol (Martian rotation or day) on which they were taken, counting up from the rover's landing date"
+                    className="w-48 p-2"
+                  >
+                    <Button className="bg-transparent">
+                      <FaQuestion className="text-sm text-gray-500" />
+                    </Button>
+                  </Tooltip>
+                </div>
                 <Input
                   type="number"
-                  label="Sol"
-                  placeholder="0"
+                  placeholder="1"
                   value={sol}
                   onValueChange={setSol}
                   color="secondary"
                 />
               </div>
-              <Button
-                className="w-1/4 mx-auto"
-                color="secondary"
-                onClick={handleSearch}
-              >
-                Search
-              </Button>
             </div>
           </CardBody>
         </Card>
