@@ -10,17 +10,24 @@ import {
   Image,
   Input,
   Spinner,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
 } from "@nextui-org/react";
 
 import axios from "axios";
-import { FaQuestion } from "react-icons/fa6";
+import { FaQuestion, FaCircleInfo } from "react-icons/fa6";
 
 const apiKey = import.meta.env.VITE_API_KEY;
 
 function MarsImagesPage() {
   const [roverType, setRoverType] = useState<string>("curiosity");
   const [data, setData] = useState({
-    data: { photos: [{ img_src: "", id: "" }] },
+    data: {
+      photos: [
+        { img_src: "", id: "", sol: "", earth_date: "", camera: { name: "" } },
+      ],
+    },
     isLoading: false,
   });
 
@@ -88,14 +95,20 @@ function MarsImagesPage() {
               <div>
                 <div className="flex items-center">
                   <span>Martian Sol</span>
-                  <Tooltip
-                    content="Photos are organized by the sol (Martian rotation or day) on which they were taken, counting up from the rover's landing date"
-                    className="w-48 p-2"
-                  >
-                    <Button className="bg-transparent">
-                      <FaQuestion className="text-sm text-gray-500" />
-                    </Button>
-                  </Tooltip>
+                  <Popover placement="top">
+                    <PopoverTrigger>
+                      <Button className="bg-transparent" size="sm">
+                        <FaQuestion className="text-gray-400" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent>
+                      <div className="w-48 p-2 text-gray-600">
+                        Photos are organized by the sol (Martian rotation or
+                        day) on which they were taken, counting up from the
+                        rover's landing date
+                      </div>
+                    </PopoverContent>
+                  </Popover>
                 </div>
                 <Input
                   type="number"
@@ -119,7 +132,7 @@ function MarsImagesPage() {
           <div className="flex flex-wrap w-full justify-center sm:gap-12 gap-16 p-4">
             {data.data.photos?.map((d) => {
               return (
-                <div key={d.id} className="hover:cursor-zoom-in">
+                <div key={d.id} className="hover:cursor-zoom-in relative">
                   <TransformWrapper>
                     <TransformComponent>
                       <Image
@@ -129,6 +142,23 @@ function MarsImagesPage() {
                       />
                     </TransformComponent>
                   </TransformWrapper>
+                  <div className=" absolute right-0 top-1">
+                    <Popover placement="top">
+                      <PopoverTrigger>
+                        <Button className="bg-transparent" size="sm">
+                          <FaCircleInfo className="text-white text-lg" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent>
+                        <div className="w-48 p-2 text-gray-600">
+                          <p>Id:{d.id}</p>
+                          <h4>Sol:{d.sol}</h4>
+                          <p>Earth Date:{d.earth_date}</p>
+                          <p>Camera:{d.camera.name}</p>
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+                  </div>
                 </div>
               );
             })}
