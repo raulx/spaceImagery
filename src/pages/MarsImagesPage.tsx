@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import NavigationBar from "../components/NavigationBar";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
@@ -25,6 +26,8 @@ import Footer from "../components/Footer";
 import { GiExpand } from "react-icons/gi";
 
 const apiKey = import.meta.env.VITE_API_KEY;
+
+//only thing that needs to be fixed is making meta request at every page change.(not efficient)
 
 function MarsImagesPage() {
   const [roverType, setRoverType] = useState<string>("curiosity");
@@ -61,10 +64,10 @@ function MarsImagesPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      let requestUrl = `https://api.nasa.gov/mars-photos/api/v1/rovers/${roverType}/photos?api_key=${apiKey}&sol=${sol}&page=${currentPage}`;
+      let requestUrl = `https://api.nasa.gov/mars-photos/api/v1/rovers/${roverType}/photos?api_key=${apiKey}&sol=${sol}&page=1`;
       let metaUrl = `https://api.nasa.gov/mars-photos/api/v1/rovers/${roverType}/photos?api_key=${apiKey}&sol=${sol}`;
       if (isLatest) {
-        requestUrl = `https://api.nasa.gov/mars-photos/api/v1/rovers/${roverType}/latest_photos?api_key=${apiKey}&page=${currentPage}`;
+        requestUrl = `https://api.nasa.gov/mars-photos/api/v1/rovers/${roverType}/latest_photos?api_key=${apiKey}&page=1`;
         metaUrl = `https://api.nasa.gov/mars-photos/api/v1/rovers/${roverType}/latest_photos?api_key=${apiKey}`;
       }
       try {
@@ -103,6 +106,50 @@ function MarsImagesPage() {
             isError: false,
           };
         });
+        setCurrentPage(1);
+      } catch (err) {
+        setData((prevValue) => {
+          return { ...prevValue, isLoading: false, isError: true };
+        });
+        setCurrentPage(1);
+      }
+    };
+    fetchData();
+  }, [roverType, sol, isLatest]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      let requestUrl = `https://api.nasa.gov/mars-photos/api/v1/rovers/${roverType}/photos?api_key=${apiKey}&sol=${sol}&page=${currentPage}`;
+
+      if (isLatest) {
+        requestUrl = `https://api.nasa.gov/mars-photos/api/v1/rovers/${roverType}/latest_photos?api_key=${apiKey}&page=${currentPage}`;
+      }
+      try {
+        setData((prevValue) => {
+          return { ...prevValue, isLoading: true };
+        });
+
+        const res = await axios.get(requestUrl);
+        let photos;
+
+        if (res.data.latest_photos) {
+          photos = res.data.latest_photos;
+        } else {
+          if (res.data.photos.length === 0) {
+            throw new Error("Data is empty");
+          } else {
+            photos = res.data.photos;
+          }
+        }
+
+        setData((prevValue) => {
+          return {
+            ...prevValue,
+            data: { ...res.data, photos: photos },
+            isLoading: false,
+            isError: false,
+          };
+        });
       } catch (err) {
         setData((prevValue) => {
           return { ...prevValue, isLoading: false, isError: true };
@@ -110,7 +157,7 @@ function MarsImagesPage() {
       }
     };
     fetchData();
-  }, [roverType, sol, isLatest, currentPage]);
+  }, [currentPage]);
 
   let render;
 
@@ -136,6 +183,7 @@ function MarsImagesPage() {
                 <TransformComponent>
                   <Image
                     removeWrapper
+                    loading="lazy"
                     className="w-[400px] h-[400px] bg-black object-contain"
                     src={d.img_src}
                   />
@@ -150,11 +198,13 @@ function MarsImagesPage() {
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent>
-                      <div className="w-48 p-2 text-gray-600">
-                        <p>Id:{d.id}</p>
-                        <h4>Sol:{d.sol}</h4>
-                        <p>Earth Date:{d.earth_date}</p>
-                        <p>Camera:{d.camera.name}</p>
+                      <div className="w-48 p-4 flex flex-col gap-2 text-gray-600">
+                        <p>Rover: {d.rover.name}</p>
+
+                        <p>Id: {d.id}</p>
+                        <p>Sol: {d.sol}</p>
+                        <p>Earth Date: {d.earth_date}</p>
+                        <p>Camera: {d.camera.name}</p>
                       </div>
                     </PopoverContent>
                   </Popover>
@@ -171,7 +221,6 @@ function MarsImagesPage() {
             </div>
           );
         })}
-        {data.data.photos.length === 0 && <div>No Data found...</div>}
       </div>
     );
   }
@@ -194,27 +243,20 @@ function MarsImagesPage() {
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent>
-                    <div className="w-48 p-2 text-gray-600">
-                      <p>Name:{data.data.photos[0].rover.name}</p>
+                    <div className="w-48 p-2 flex flex-col gap-2 font-bold py-4 text-gray-500">
+                      <p>Name: {data.data.photos[0].rover.name}</p>
                       <p>
-                        Landing date:
-                        {data.data.photos[0].rover.landing_date}
+                        Landing date: {data.data.photos[0].rover.landing_date}
                       </p>
                       <p>
-                        Launch date:
-                        {data.data.photos[0].rover.launch_date}
+                        Launch date: {data.data.photos[0].rover.launch_date}
                       </p>
-                      <p>
-                        Status:
-                        {data.data.photos[0].rover.status}
+                      <p className=" capitalize">
+                        Status: {data.data.photos[0].rover.status}
                       </p>
+                      <p>Max sol: {data.data.photos[0].rover.max_sol}</p>
                       <p>
-                        Max sol:
-                        {data.data.photos[0].rover.max_sol}
-                      </p>
-                      <p>
-                        Total Photos:
-                        {data.data.photos[0].rover.total_photos}
+                        Total Photos: {data.data.photos[0].rover.total_photos}
                       </p>
                     </div>
                   </PopoverContent>
@@ -277,7 +319,7 @@ function MarsImagesPage() {
         </Card>
       </section>
       <Divider className="my-6" />
-      <h1 className="text-center my-6 font-bold uppercase text-xl font-KronaOne">
+      <h1 className="text-center sm:my-6 my-4 font-bold uppercase sm:text-xl font-KronaOne">
         Total Photos:{totalPhotos}
       </h1>
       {!data.isError && (
