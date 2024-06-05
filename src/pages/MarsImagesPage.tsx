@@ -30,6 +30,8 @@ function MarsImagesPage() {
   const [roverType, setRoverType] = useState<string>("curiosity");
   const [isLatest, setIslatest] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalPhotos, setTotalPhotos] = useState(0);
   const [data, setData] = useState({
     data: {
       photos: [
@@ -52,6 +54,7 @@ function MarsImagesPage() {
       ],
     },
     isLoading: false,
+    isError: false,
   });
 
   const [sol, setSol] = useState<string>("1");
@@ -59,14 +62,26 @@ function MarsImagesPage() {
   useEffect(() => {
     const fetchData = async () => {
       let requestUrl = `https://api.nasa.gov/mars-photos/api/v1/rovers/${roverType}/photos?api_key=${apiKey}&sol=${sol}&page=${currentPage}`;
-
+      let metaUrl = `https://api.nasa.gov/mars-photos/api/v1/rovers/${roverType}/photos?api_key=${apiKey}&sol=${sol}`;
       if (isLatest) {
         requestUrl = `https://api.nasa.gov/mars-photos/api/v1/rovers/${roverType}/latest_photos?api_key=${apiKey}&page=${currentPage}`;
+        metaUrl = `https://api.nasa.gov/mars-photos/api/v1/rovers/${roverType}/latest_photos?api_key=${apiKey}`;
       }
       try {
         setData((prevValue) => {
           return { ...prevValue, isLoading: true };
         });
+        const metaData = await axios.get(metaUrl);
+
+        if (metaData.data) {
+          const totalPhotos =
+            metaData.data.photos?.length ||
+            metaData.data.latest_photos?.length ||
+            0;
+          setTotalPhotos(totalPhotos);
+          const totalPages = Math.floor(totalPhotos / 25 + 1);
+          setTotalPages(totalPages);
+        }
         const res = await axios.get(requestUrl);
         let photos;
 
@@ -85,17 +100,81 @@ function MarsImagesPage() {
             ...prevValue,
             data: { ...res.data, photos: photos },
             isLoading: false,
+            isError: false,
           };
         });
       } catch (err) {
-        console.log(err);
         setData((prevValue) => {
-          return { ...prevValue, isLoading: false };
+          return { ...prevValue, isLoading: false, isError: true };
         });
       }
     };
     fetchData();
   }, [roverType, sol, isLatest, currentPage]);
+
+  let render;
+
+  if (data.isLoading) {
+    render = (
+      <div className="w-screen flex justify-center items-center h-96">
+        <Spinner size="lg" />
+      </div>
+    );
+  } else if (data.isError) {
+    render = (
+      <div className="w-48 h-48 bg-red-600 text-white mx-auto p-6 rounded-lg">
+        No Data found
+      </div>
+    );
+  } else {
+    render = (
+      <div className="flex flex-wrap w-full justify-center sm:gap-12 gap-16 p-4">
+        {data.data.photos?.map((d) => {
+          return (
+            <div key={d.id} className="hover:cursor-zoom-in relative">
+              <TransformWrapper>
+                <TransformComponent>
+                  <Image
+                    removeWrapper
+                    className="w-[400px] h-[400px] bg-black object-contain"
+                    src={d.img_src}
+                  />
+                </TransformComponent>
+              </TransformWrapper>
+              <div className="flex justify-between items-center w-24 h-12  absolute right-6 top-1">
+                <div>
+                  <Popover placement="top">
+                    <PopoverTrigger>
+                      <Button className="bg-transparent" size="sm">
+                        <FaCircleInfo className="text-white text-xl" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent>
+                      <div className="w-48 p-2 text-gray-600">
+                        <p>Id:{d.id}</p>
+                        <h4>Sol:{d.sol}</h4>
+                        <p>Earth Date:{d.earth_date}</p>
+                        <p>Camera:{d.camera.name}</p>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+                <div>
+                  <Button
+                    isIconOnly
+                    onPress={() => handleOpenFullImage(d.img_src)}
+                  >
+                    <GiExpand />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+        {data.data.photos.length === 0 && <div>No Data found...</div>}
+      </div>
+    );
+  }
   return (
     <>
       <NavigationBar />
@@ -198,69 +277,23 @@ function MarsImagesPage() {
         </Card>
       </section>
       <Divider className="my-6" />
-      <div className="min-h-96">
-        {data.isLoading ? (
-          <div className="w-screen flex justify-center items-center h-96">
-            <Spinner size="lg" />
-          </div>
-        ) : (
-          <div className="flex flex-wrap w-full justify-center sm:gap-12 gap-16 p-4">
-            {data.data.photos?.map((d) => {
-              return (
-                <div key={d.id} className="hover:cursor-zoom-in relative">
-                  <TransformWrapper>
-                    <TransformComponent>
-                      <Image
-                        removeWrapper
-                        className="w-[400px] h-[400px] bg-black object-contain"
-                        src={d.img_src}
-                      />
-                    </TransformComponent>
-                  </TransformWrapper>
-                  <div className="flex justify-between items-center w-24 h-12  absolute right-6 top-1">
-                    <div>
-                      <Popover placement="top">
-                        <PopoverTrigger>
-                          <Button className="bg-transparent" size="sm">
-                            <FaCircleInfo className="text-white text-xl" />
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent>
-                          <div className="w-48 p-2 text-gray-600">
-                            <p>Id:{d.id}</p>
-                            <h4>Sol:{d.sol}</h4>
-                            <p>Earth Date:{d.earth_date}</p>
-                            <p>Camera:{d.camera.name}</p>
-                          </div>
-                        </PopoverContent>
-                      </Popover>
-                    </div>
-                    <div>
-                      <Button
-                        isIconOnly
-                        onPress={() => handleOpenFullImage(d.img_src)}
-                      >
-                        <GiExpand />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-            {data.data.photos.length === 0 && <div>No Data found...</div>}
-          </div>
-        )}
+      <h1 className="text-center my-6 font-bold uppercase text-xl font-KronaOne">
+        Total Photos:{totalPhotos}
+      </h1>
+      {!data.isError && (
         <div className="w-full flex justify-center items-center my-10">
           <Pagination
             color="secondary"
-            total={10}
+            total={totalPages}
             page={currentPage}
             onChange={setCurrentPage}
             showControls
+            loop
           />
         </div>
-        <Footer />
-      </div>
+      )}
+      <div className="min-h-96">{render}</div>
+      <Footer />
     </>
   );
 }
