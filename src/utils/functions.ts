@@ -7,4 +7,14 @@ function getCurrentDate() {
     return `${year}-${month}-${day}`;
   }
 
-export {getCurrentDate}
+const handleOpenFullImage = (url: string) => {
+    const windowName = "hd";
+    const width = window.screen.width;
+    const height = window.screen.height;
+    const windowFeatures = `width=${width},height=${height},resizable=yes,scrollbars=yes`;
+
+    // Open a new window
+    window.open(url, windowName, windowFeatures);
+  };
+
+export {getCurrentDate,handleOpenFullImage}

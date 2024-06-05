@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { Skeleton } from "@nextui-org/react";
 import { FaExpandAlt } from "react-icons/fa";
 import ReactPlayer from "react-player/lazy";
+import { handleOpenFullImage } from "../utils/functions";
 import {
   AppDispatch,
   RootState,
@@ -48,15 +49,15 @@ function Apod() {
 
   let content;
 
-  const handleOpenFullImage = (url: string) => {
-    const windowName = "hd";
-    const width = window.screen.width;
-    const height = window.screen.height;
-    const windowFeatures = `width=${width},height=${height},resizable=yes,scrollbars=yes`;
+  // const handleOpenFullImage = (url: string) => {
+  //   const windowName = "hd";
+  //   const width = window.screen.width;
+  //   const height = window.screen.height;
+  //   const windowFeatures = `width=${width},height=${height},resizable=yes,scrollbars=yes`;
 
-    // Open a new window
-    window.open(url, windowName, windowFeatures);
-  };
+  //   // Open a new window
+  //   window.open(url, windowName, windowFeatures);
+  // };
 
   if (isFetching) {
     content = (

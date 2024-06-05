@@ -15,17 +15,21 @@ import {
   RadioGroup,
   Radio,
   Switch,
+  Pagination,
 } from "@nextui-org/react";
 
+import { handleOpenFullImage } from "../utils/functions";
 import axios from "axios";
 import { FaQuestion, FaCircleInfo } from "react-icons/fa6";
 import Footer from "../components/Footer";
+import { GiExpand } from "react-icons/gi";
 
 const apiKey = import.meta.env.VITE_API_KEY;
 
 function MarsImagesPage() {
   const [roverType, setRoverType] = useState<string>("curiosity");
   const [isLatest, setIslatest] = useState<boolean>(true);
+  const [currentPage, setCurrentPage] = useState(1);
   const [data, setData] = useState({
     data: {
       photos: [
@@ -54,10 +58,10 @@ function MarsImagesPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      let requestUrl = `https://api.nasa.gov/mars-photos/api/v1/rovers/${roverType}/photos?api_key=${apiKey}&sol=${sol}&page=1`;
+      let requestUrl = `https://api.nasa.gov/mars-photos/api/v1/rovers/${roverType}/photos?api_key=${apiKey}&sol=${sol}&page=${currentPage}`;
 
       if (isLatest) {
-        requestUrl = `https://api.nasa.gov/mars-photos/api/v1/rovers/${roverType}/latest_photos?api_key=${apiKey}&page=1`;
+        requestUrl = `https://api.nasa.gov/mars-photos/api/v1/rovers/${roverType}/latest_photos?api_key=${apiKey}&page=${currentPage}`;
       }
       try {
         setData((prevValue) => {
@@ -91,7 +95,7 @@ function MarsImagesPage() {
       }
     };
     fetchData();
-  }, [roverType, sol, isLatest]);
+  }, [roverType, sol, isLatest, currentPage]);
   return (
     <>
       <NavigationBar />
@@ -151,7 +155,11 @@ function MarsImagesPage() {
             </div>
 
             <div>
-              <Switch isSelected={isLatest} onValueChange={setIslatest}>
+              <Switch
+                isSelected={isLatest}
+                onValueChange={setIslatest}
+                color="secondary"
+              >
                 Latest
               </Switch>
             </div>
@@ -209,22 +217,32 @@ function MarsImagesPage() {
                       />
                     </TransformComponent>
                   </TransformWrapper>
-                  <div className=" absolute right-0 top-1">
-                    <Popover placement="top">
-                      <PopoverTrigger>
-                        <Button className="bg-transparent" size="sm">
-                          <FaCircleInfo className="text-white text-lg" />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent>
-                        <div className="w-48 p-2 text-gray-600">
-                          <p>Id:{d.id}</p>
-                          <h4>Sol:{d.sol}</h4>
-                          <p>Earth Date:{d.earth_date}</p>
-                          <p>Camera:{d.camera.name}</p>
-                        </div>
-                      </PopoverContent>
-                    </Popover>
+                  <div className="flex justify-between items-center w-24 h-12  absolute right-6 top-1">
+                    <div>
+                      <Popover placement="top">
+                        <PopoverTrigger>
+                          <Button className="bg-transparent" size="sm">
+                            <FaCircleInfo className="text-white text-xl" />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent>
+                          <div className="w-48 p-2 text-gray-600">
+                            <p>Id:{d.id}</p>
+                            <h4>Sol:{d.sol}</h4>
+                            <p>Earth Date:{d.earth_date}</p>
+                            <p>Camera:{d.camera.name}</p>
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+                    </div>
+                    <div>
+                      <Button
+                        isIconOnly
+                        onPress={() => handleOpenFullImage(d.img_src)}
+                      >
+                        <GiExpand />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               );
@@ -232,6 +250,15 @@ function MarsImagesPage() {
             {data.data.photos.length === 0 && <div>No Data found...</div>}
           </div>
         )}
+        <div className="w-full flex justify-center items-center my-10">
+          <Pagination
+            color="secondary"
+            total={10}
+            page={currentPage}
+            onChange={setCurrentPage}
+            showControls
+          />
+        </div>
         <Footer />
       </div>
     </>
