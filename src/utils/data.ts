@@ -1,1 +1,1 @@
-export const marsRoverCameras:string[] = ["FHAZ","RHAZ","MAST","CHEMCAM","MAHLI","MARDI","NAVCAM"]
+export const marsRoverCameras:string[] = ["ALL","FHAZ","RHAZ","MAST","CHEMCAM","MAHLI","MARDI","NAVCAM"]

@@ -24,14 +24,15 @@ import axios from "axios";
 import { FaQuestion, FaCircleInfo } from "react-icons/fa6";
 import Footer from "../components/Footer";
 import { GiExpand } from "react-icons/gi";
+import { Select, SelectItem } from "@nextui-org/react";
 
 const apiKey = import.meta.env.VITE_API_KEY;
 
-//only thing that needs to be fixed is making meta request at every page change.(not efficient)
-
 function MarsImagesPage() {
   const [roverType, setRoverType] = useState<string>("curiosity");
+  const [cameraType, setCameraType] = useState<string>("ALL");
   const [isLatest, setIslatest] = useState<boolean>(true);
+  const [showAll, setShowAll] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalPhotos, setTotalPhotos] = useState(0);
@@ -52,6 +53,7 @@ function MarsImagesPage() {
             max_sol: "",
             max_date: "",
             total_photos: "",
+            cameras: [{ name: "", full_name: "" }],
           },
         },
       ],
@@ -160,6 +162,13 @@ function MarsImagesPage() {
   }, [currentPage]);
 
   let render;
+  const filteredData = data.data.photos.filter((d) => {
+    if (showAll || cameraType === "ALL") {
+      return d;
+    } else {
+      return d.camera.name === cameraType;
+    }
+  });
 
   if (data.isLoading) {
     render = (
@@ -176,7 +185,7 @@ function MarsImagesPage() {
   } else {
     render = (
       <div className="flex flex-wrap w-full justify-center sm:gap-12 gap-16 p-4">
-        {data.data.photos?.map((d) => {
+        {filteredData.map((d) => {
           return (
             <div key={d.id} className="hover:cursor-zoom-in relative">
               <TransformWrapper>
@@ -224,16 +233,17 @@ function MarsImagesPage() {
       </div>
     );
   }
+
   return (
     <>
       <NavigationBar />
       <section id="mars-search-box">
         <Card
-          className="sm:max-w-[300px] w-11/12 border mx-auto my-2"
+          className="sm:max-w-[400px] w-11/12 border mx-auto my-2"
           shadow="sm"
           radius="sm"
         >
-          <CardBody className="flex flex-col gap-4">
+          <CardBody className="flex flex-col gap-2">
             <div className="border rounded-2xl  p-4  bg-slate-50 relative ">
               <span className="absolute right-0 top-1">
                 <Popover placement="bottom" showArrow>
@@ -251,7 +261,7 @@ function MarsImagesPage() {
                       <p>
                         Launch date: {data.data.photos[0].rover.launch_date}
                       </p>
-                      <p className=" capitalize">
+                      <p className="capitalize">
                         Status: {data.data.photos[0].rover.status}
                       </p>
                       <p>Max sol: {data.data.photos[0].rover.max_sol}</p>
@@ -275,21 +285,20 @@ function MarsImagesPage() {
               </RadioGroup>
             </div>
 
-            <div>
-              <Switch
-                isSelected={isLatest}
-                onValueChange={setIslatest}
-                color="secondary"
-              >
-                Latest
-              </Switch>
-            </div>
-
-            <div className="flex justify-between items-center gap-2">
+            <div className="flex justify-between h-20 items-center border p-2 bg-slate-50">
+              <div className="w-1/2 ">
+                <Switch
+                  isSelected={isLatest}
+                  onValueChange={setIslatest}
+                  color="secondary"
+                >
+                  Latest Photos
+                </Switch>
+              </div>
               {!isLatest && (
-                <div>
-                  <div className="flex items-center">
-                    <span>Martian Sol</span>
+                <div className="w-1/2">
+                  <div className="flex">
+                    <span className="text-md">Martian Sol</span>
                     <Popover placement="top">
                       <PopoverTrigger>
                         <Button className="bg-transparent" size="sm">
@@ -305,13 +314,45 @@ function MarsImagesPage() {
                       </PopoverContent>
                     </Popover>
                   </div>
+
                   <Input
                     type="number"
                     placeholder="1"
                     value={sol}
+                    size="sm"
                     onValueChange={setSol}
                     color="secondary"
                   />
+                </div>
+              )}
+            </div>
+
+            <div className="flex justify-between items-center w-full gap-2 border p-2 h-16 bg-slate-50">
+              <div className="w-1/2">
+                <Switch
+                  isSelected={showAll}
+                  onValueChange={setShowAll}
+                  color="secondary"
+                >
+                  Show All
+                </Switch>
+              </div>
+              {!showAll && (
+                <div className="w-1/2 self-end">
+                  <Select
+                    label="Camera"
+                    variant="bordered"
+                    placeholder="Select Camera"
+                    size="sm"
+                    className="max-w-xs"
+                    onChange={(e) => setCameraType(e.target.value)}
+                  >
+                    {data.data.photos[0].rover.cameras.map((camera) => {
+                      return (
+                        <SelectItem key={camera.name}>{camera.name}</SelectItem>
+                      );
+                    })}
+                  </Select>
                 </div>
               )}
             </div>
