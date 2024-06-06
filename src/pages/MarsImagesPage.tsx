@@ -20,11 +20,20 @@ import {
 } from "@nextui-org/react";
 
 import { handleOpenFullImage } from "../utils/functions";
+
 import axios from "axios";
 import { FaQuestion, FaCircleInfo } from "react-icons/fa6";
 import Footer from "../components/Footer";
 import { GiExpand } from "react-icons/gi";
 import { Select, SelectItem } from "@nextui-org/react";
+import {
+  AppDispatch,
+  RootState,
+  fetchMarsImageDataStart,
+  fetchMarsImageDataError,
+  fetchMarsImageDataSuccess,
+} from "../store/store";
+import { useDispatch, useSelector } from "react-redux";
 
 const apiKey = import.meta.env.VITE_API_KEY;
 
@@ -36,31 +45,35 @@ function MarsImagesPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalPhotos, setTotalPhotos] = useState(0);
-  const [data, setData] = useState({
-    data: {
-      photos: [
-        {
-          img_src: "",
-          id: "",
-          sol: "",
-          earth_date: "",
-          camera: { name: "" },
-          rover: {
-            name: "",
-            landing_date: "",
-            launch_date: "",
-            status: "",
-            max_sol: "",
-            max_date: "",
-            total_photos: "",
-            cameras: [{ name: "", full_name: "" }],
-          },
-        },
-      ],
-    },
-    isLoading: false,
-    isError: false,
+  const dispatch: AppDispatch = useDispatch();
+  const { data, isLoading, isError } = useSelector((state: RootState) => {
+    return state.marsImages;
   });
+  // const [data, setData] = useState({
+  //   data: {
+  //     photos: [
+  //       {
+  //         img_src: "",
+  //         id: "",
+  //         sol: "",
+  //         earth_date: "",
+  //         camera: { name: "" },
+  //         rover: {
+  //           name: "",
+  //           landing_date: "",
+  //           launch_date: "",
+  //           status: "",
+  //           max_sol: "",
+  //           max_date: "",
+  //           total_photos: "",
+  //           cameras: [{ name: "", full_name: "" }],
+  //         },
+  //       },
+  //     ],
+  //   },
+  //   isLoading: false,
+  //   isError: false,
+  // });
 
   const [sol, setSol] = useState<string>("1");
 
@@ -73,9 +86,11 @@ function MarsImagesPage() {
         metaUrl = `https://api.nasa.gov/mars-photos/api/v1/rovers/${roverType}/latest_photos?api_key=${apiKey}`;
       }
       try {
-        setData((prevValue) => {
-          return { ...prevValue, isLoading: true };
-        });
+        // setData((prevValue) => {
+        //   return { ...prevValue, isLoading: true };
+        // });
+
+        dispatch(fetchMarsImageDataStart());
         const metaData = await axios.get(metaUrl);
 
         if (metaData.data) {
@@ -100,19 +115,21 @@ function MarsImagesPage() {
           }
         }
 
-        setData((prevValue) => {
-          return {
-            ...prevValue,
-            data: { ...res.data, photos: photos },
-            isLoading: false,
-            isError: false,
-          };
-        });
+        // setData((prevValue) => {
+        //   return {
+        //     ...prevValue,
+        //     data: { ...res.data, photos: photos },
+        //     isLoading: false,
+        //     isError: false,
+        //   };
+        // });
+        dispatch(fetchMarsImageDataSuccess({ photos: photos }));
         setCurrentPage(1);
       } catch (err) {
-        setData((prevValue) => {
-          return { ...prevValue, isLoading: false, isError: true };
-        });
+        // setData((prevValue) => {
+        //   return { ...prevValue, isLoading: false, isError: true };
+        // });
+        dispatch(fetchMarsImageDataError());
         setCurrentPage(1);
       }
     };
@@ -127,10 +144,10 @@ function MarsImagesPage() {
         requestUrl = `https://api.nasa.gov/mars-photos/api/v1/rovers/${roverType}/latest_photos?api_key=${apiKey}&page=${currentPage}`;
       }
       try {
-        setData((prevValue) => {
-          return { ...prevValue, isLoading: true };
-        });
-
+        // setData((prevValue) => {
+        //   return { ...prevValue, isLoading: true };
+        // });
+        dispatch(fetchMarsImageDataStart());
         const res = await axios.get(requestUrl);
         let photos;
 
@@ -144,25 +161,29 @@ function MarsImagesPage() {
           }
         }
 
-        setData((prevValue) => {
-          return {
-            ...prevValue,
-            data: { ...res.data, photos: photos },
-            isLoading: false,
-            isError: false,
-          };
-        });
+        // setData((prevValue) => {
+        //   return {
+        //     ...prevValue,
+        //     data: { ...res.data, photos: photos },
+        //     isLoading: false,
+        //     isError: false,
+        //   };
+        // });
+
+        dispatch(fetchMarsImageDataSuccess({ photos: photos }));
       } catch (err) {
-        setData((prevValue) => {
-          return { ...prevValue, isLoading: false, isError: true };
-        });
+        // setData((prevValue) => {
+        //   return { ...prevValue, isLoading: false, isError: true };
+        // });
+        dispatch(fetchMarsImageDataError());
       }
     };
     fetchData();
   }, [currentPage]);
 
   let render;
-  const filteredData = data.data.photos.filter((d) => {
+
+  const filteredData = data.photos.filter((d) => {
     if (showAll || cameraType === "ALL") {
       return d;
     } else {
@@ -170,13 +191,13 @@ function MarsImagesPage() {
     }
   });
 
-  if (data.isLoading) {
+  if (isLoading) {
     render = (
       <div className="w-screen flex justify-center items-center h-96">
         <Spinner size="lg" />
       </div>
     );
-  } else if (data.isError) {
+  } else if (isError) {
     render = (
       <div className="w-48 h-48 bg-red-600 text-white mx-auto p-6 rounded-lg">
         No Data found
@@ -244,7 +265,7 @@ function MarsImagesPage() {
           radius="sm"
         >
           <CardBody className="flex flex-col gap-2">
-            <div className="border rounded-2xl  p-4  bg-slate-50 relative ">
+            <div className="border rounded-2xl  p-4  bg-slate-50 relative">
               <span className="absolute right-0 top-1">
                 <Popover placement="bottom" showArrow>
                   <PopoverTrigger>
@@ -254,20 +275,14 @@ function MarsImagesPage() {
                   </PopoverTrigger>
                   <PopoverContent>
                     <div className="w-48 p-2 flex flex-col gap-2 font-bold py-4 text-gray-500">
-                      <p>Name: {data.data.photos[0].rover.name}</p>
-                      <p>
-                        Landing date: {data.data.photos[0].rover.landing_date}
-                      </p>
-                      <p>
-                        Launch date: {data.data.photos[0].rover.launch_date}
-                      </p>
+                      <p>Name: {data.photos[0].rover.name}</p>
+                      <p>Landing date: {data.photos[0].rover.landing_date}</p>
+                      <p>Launch date: {data.photos[0].rover.launch_date}</p>
                       <p className="capitalize">
-                        Status: {data.data.photos[0].rover.status}
+                        Status: {data.photos[0].rover.status}
                       </p>
-                      <p>Max sol: {data.data.photos[0].rover.max_sol}</p>
-                      <p>
-                        Total Photos: {data.data.photos[0].rover.total_photos}
-                      </p>
+                      <p>Max sol: {data.photos[0].rover.max_sol}</p>
+                      <p>Total Photos: {data.photos[0].rover.total_photos}</p>
                     </div>
                   </PopoverContent>
                 </Popover>
@@ -347,7 +362,7 @@ function MarsImagesPage() {
                     className="max-w-xs"
                     onChange={(e) => setCameraType(e.target.value)}
                   >
-                    {data.data.photos[0].rover.cameras.map((camera) => {
+                    {data.photos[0].rover.cameras.map((camera) => {
                       return (
                         <SelectItem key={camera.name}>{camera.name}</SelectItem>
                       );
@@ -363,7 +378,7 @@ function MarsImagesPage() {
       <h1 className="text-center sm:my-6 my-4 font-bold uppercase sm:text-xl font-KronaOne">
         Total Photos:{totalPhotos}
       </h1>
-      {!data.isError && (
+      {!isError && (
         <div className="w-full flex justify-center items-center my-10">
           <Pagination
             color="secondary"
