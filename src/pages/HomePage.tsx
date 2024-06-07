@@ -5,33 +5,7 @@ import Apod from "../components/Apod";
 import Footer from "../components/Footer";
 import { Button } from "@nextui-org/react";
 import { Link } from "react-router-dom";
-
-const marsImages = [
-  {
-    id: 1,
-    url: "https://res.cloudinary.com/dj5yf27lr/image/upload/v1717231167/spaceImagery/MarsImages/ohswszwf7yts1u4kdrpb.png",
-  },
-  {
-    id: 2,
-    url: "https://res.cloudinary.com/dj5yf27lr/image/upload/v1717231167/spaceImagery/MarsImages/v2tl5r2fv7zsijhtxsax.png",
-  },
-  {
-    id: 3,
-    url: "https://res.cloudinary.com/dj5yf27lr/image/upload/v1717231167/spaceImagery/MarsImages/ljylsikzp5ncqq13zszc.png",
-  },
-  {
-    id: 4,
-    url: "https://res.cloudinary.com/dj5yf27lr/image/upload/v1717231166/spaceImagery/MarsImages/a9cfcb9izfjbywvr1cv8.png",
-  },
-  {
-    id: 5,
-    url: "https://res.cloudinary.com/dj5yf27lr/image/upload/v1717231165/spaceImagery/MarsImages/vnxfzljqxvkmzy0zjgju.png",
-  },
-  {
-    id: 6,
-    url: "https://res.cloudinary.com/dj5yf27lr/image/upload/v1717231164/spaceImagery/MarsImages/vhpofnvdzelswvgxdemh.png",
-  },
-];
+import { marsMockImages } from "../utils/data";
 
 function HomePage() {
   return (
@@ -48,7 +22,7 @@ function HomePage() {
           </h1>
           <Divider />
           <div className="flex w-full items-center justify-between my-4 flex-wrap  sm:gap-4 gap-8 sm:p-4">
-            {marsImages.map((image) => {
+            {marsMockImages.map((image) => {
               return (
                 <Image
                   key={image.id}
@@ -59,11 +33,10 @@ function HomePage() {
               );
             })}
           </div>
-          <Link to={"/mars"} className="my-4 self-center ">
-            <Button className="bg-white font-bold border-2 rounded-lg">
-              Explore More
-            </Button>
-          </Link>
+
+          <Button className="bg-white font-bold border-2 rounded-lg w-1/6 mx-auto">
+            <Link to={"/mars"}>Explore More</Link>
+          </Button>
         </section>
       </main>
       <Footer />

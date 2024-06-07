@@ -49,21 +49,16 @@ function Apod() {
 
   let content;
 
-  // const handleOpenFullImage = (url: string) => {
-  //   const windowName = "hd";
-  //   const width = window.screen.width;
-  //   const height = window.screen.height;
-  //   const windowFeatures = `width=${width},height=${height},resizable=yes,scrollbars=yes`;
-
-  //   // Open a new window
-  //   window.open(url, windowName, windowFeatures);
-  // };
-
   if (isFetching) {
     content = (
-      <Skeleton>
-        <div className="h-96 w-full bg-blue-100"></div>
-      </Skeleton>
+      <div className="sm:h-[480px] h-[800px] w-full flex sm:flex-row  flex-col gap-8 rounded-lg border-2 sm:px-4 px-2 py-6">
+        <Skeleton className="sm:w-1/2 sm:h-full h-1/2 w-full rounded-lg"></Skeleton>
+        <div className="sm:w-1/2 sm:h-full h-1/2 w-full rounded-lg flex flex-col justify-between gap-4 items-center">
+          <Skeleton className="rounded-3xl h-1/6 w-full"></Skeleton>
+          <Skeleton className="rounded-3xl h-4/6 w-full"></Skeleton>
+          <Skeleton className="rounded-3xl h-1/6 w-full"></Skeleton>
+        </div>
+      </div>
     );
   } else if (data) {
     content = (

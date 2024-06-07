@@ -24,34 +24,35 @@ function MarsImagesPage() {
   return (
     <>
       <NavigationBar />
-      <MarsImagesSelectBox
-        currentPage={currentPage}
-        isLatest={isLatest}
-        roverType={roverType}
-        sol={sol}
-        setSol={setSol}
-        setRoverType={setRoverType}
-        setIsLatest={setIsLatest}
-        setTotalPages={setTotalPages}
-        setTotalPhotos={setTotalPhotos}
-        setCurrentPage={setCurrentPage}
-      />
-      <Divider className="my-6" />
-      <h1 className="text-center sm:my-6 my-4 font-bold uppercase sm:text-xl font-KronaOne">
-        Total Photos:{totalPhotos}
-      </h1>
-      {!isError && (
-        <MarsImagesPagination
-          isLatest={isLatest}
+      <main className="min-h-[800px]">
+        <MarsImagesSelectBox
           currentPage={currentPage}
+          isLatest={isLatest}
           roverType={roverType}
-          totalPages={totalPages}
-          setCurrentPage={setCurrentPage}
           sol={sol}
+          setSol={setSol}
+          setRoverType={setRoverType}
+          setIsLatest={setIsLatest}
+          setTotalPages={setTotalPages}
+          setTotalPhotos={setTotalPhotos}
+          setCurrentPage={setCurrentPage}
         />
-      )}
-
-      <MarsImagesBox />
+        <Divider className="my-6" />
+        <h1 className="text-center sm:my-6 my-4 font-bold uppercase sm:text-xl font-KronaOne">
+          Total Photos:{totalPhotos}
+        </h1>
+        {!isError && (
+          <MarsImagesPagination
+            isLatest={isLatest}
+            currentPage={currentPage}
+            roverType={roverType}
+            totalPages={totalPages}
+            setCurrentPage={setCurrentPage}
+            sol={sol}
+          />
+        )}
+        <MarsImagesBox />
+      </main>
 
       <Footer />
     </>
