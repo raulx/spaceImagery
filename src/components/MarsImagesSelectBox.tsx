@@ -10,8 +10,6 @@ import {
   Radio,
   Switch,
   Input,
-  Select,
-  SelectItem,
 } from "@nextui-org/react";
 import { FaQuestion } from "react-icons/fa";
 import { FaCircleInfo } from "react-icons/fa6";
@@ -24,16 +22,18 @@ import {
   fetchMarsImageDataSuccess,
 } from "../store/store";
 import axios from "axios";
-import { SetStateAction, useEffect, useState } from "react";
+import { SetStateAction, useEffect } from "react";
 
 const apiKey = import.meta.env.VITE_API_KEY;
 
 interface MarsImagesSelectBoxProps {
-  showAll: boolean;
   currentPage: number;
-  setShowAll: React.Dispatch<SetStateAction<boolean>>;
-
-  setCameraType: React.Dispatch<SetStateAction<string>>;
+  isLatest: boolean;
+  roverType: string;
+  sol: string;
+  setSol: React.Dispatch<SetStateAction<string>>;
+  setRoverType: React.Dispatch<SetStateAction<string>>;
+  setIsLatest: React.Dispatch<SetStateAction<boolean>>;
   setTotalPages: React.Dispatch<SetStateAction<number>>;
   setCurrentPage: React.Dispatch<SetStateAction<number>>;
   setTotalPhotos: React.Dispatch<SetStateAction<number>>;
@@ -44,18 +44,16 @@ function MarsImagesSelectBox(props: MarsImagesSelectBoxProps) {
     return state.marsImages;
   });
   const {
-    showAll,
-    currentPage,
-    setShowAll,
-    setCameraType,
+    isLatest,
+    roverType,
+    sol,
+    setSol,
+    setRoverType,
+    setIsLatest,
     setTotalPages,
     setTotalPhotos,
     setCurrentPage,
   } = props;
-
-  const [roverType, setRoverType] = useState<string>("curiosity");
-  const [isLatest, setIslatest] = useState<boolean>(true);
-  const [sol, setSol] = useState<string>("1");
 
   const dispatch: AppDispatch = useDispatch();
 
@@ -102,36 +100,6 @@ function MarsImagesSelectBox(props: MarsImagesSelectBoxProps) {
     };
     fetchData();
   }, [roverType, sol, isLatest]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      let requestUrl = `https://api.nasa.gov/mars-photos/api/v1/rovers/${roverType}/photos?api_key=${apiKey}&sol=${sol}&page=${currentPage}`;
-
-      if (isLatest) {
-        requestUrl = `https://api.nasa.gov/mars-photos/api/v1/rovers/${roverType}/latest_photos?api_key=${apiKey}&page=${currentPage}`;
-      }
-      try {
-        dispatch(fetchMarsImageDataStart());
-        const res = await axios.get(requestUrl);
-        let photos;
-
-        if (res.data.latest_photos) {
-          photos = res.data.latest_photos;
-        } else {
-          if (res.data.photos.length === 0) {
-            throw new Error("Data is empty");
-          } else {
-            photos = res.data.photos;
-          }
-        }
-
-        dispatch(fetchMarsImageDataSuccess({ photos: photos }));
-      } catch (err) {
-        dispatch(fetchMarsImageDataError());
-      }
-    };
-    fetchData();
-  }, [currentPage]);
 
   return (
     <section id="mars-search-box">
@@ -180,7 +148,7 @@ function MarsImagesSelectBox(props: MarsImagesSelectBoxProps) {
             <div className="w-1/2 ">
               <Switch
                 isSelected={isLatest}
-                onValueChange={setIslatest}
+                onValueChange={setIsLatest}
                 color="secondary"
               >
                 Latest Photos
@@ -214,36 +182,6 @@ function MarsImagesSelectBox(props: MarsImagesSelectBoxProps) {
                   onValueChange={setSol}
                   color="secondary"
                 />
-              </div>
-            )}
-          </div>
-
-          <div className="flex justify-between items-center w-full gap-2 border p-2 h-16 bg-slate-50">
-            <div className="w-1/2">
-              <Switch
-                isSelected={showAll}
-                onValueChange={setShowAll}
-                color="secondary"
-              >
-                Show All
-              </Switch>
-            </div>
-            {!showAll && (
-              <div className="w-1/2 self-end">
-                <Select
-                  label="Camera"
-                  variant="bordered"
-                  placeholder="Select Camera"
-                  size="sm"
-                  className="max-w-xs"
-                  onChange={(e) => setCameraType(e.target.value)}
-                >
-                  {data.photos[0].rover.cameras.map((camera) => {
-                    return (
-                      <SelectItem key={camera.name}>{camera.name}</SelectItem>
-                    );
-                  })}
-                </Select>
               </div>
             )}
           </div>
