@@ -13,6 +13,7 @@ const App = lazy(() => import("./App.tsx"));
 const HomePage = lazy(() => import("./pages/HomePage.tsx"));
 const MarsImagesPage = lazy(() => import("./pages/MarsImagesPage.tsx"));
 const GalleryPage = lazy(() => import("./pages/GalleryPage.tsx"));
+const Error = lazy(() => import("./components/Error.tsx"));
 
 const router = createBrowserRouter([
   {
@@ -34,6 +35,20 @@ const router = createBrowserRouter([
       { path: "/mars", element: <MarsImagesPage /> },
       { path: "/gallery", element: <GalleryPage /> },
     ],
+  },
+  {
+    path: "/error",
+    element: (
+      <Suspense
+        fallback={
+          <div className="w-screen h-screen flex justify-center items-center">
+            <Spinner size="lg" />
+          </div>
+        }
+      >
+        <Error />
+      </Suspense>
+    ),
   },
 ]);
 
