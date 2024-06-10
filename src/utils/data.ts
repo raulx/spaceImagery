@@ -1,6 +1,6 @@
 export const marsRoverCameras:string[] = ["ALL","FHAZ","RHAZ","MAST","CHEMCAM","MAHLI","MARDI","NAVCAM"]
 
-export const marsMockImages = [
+export const marsMockImages:{id:number,url:string}[] = [
     {
       id: 1,
       url: "https://res.cloudinary.com/dj5yf27lr/image/upload/v1717231167/spaceImagery/MarsImages/ohswszwf7yts1u4kdrpb.png",
@@ -26,3 +26,12 @@ export const marsMockImages = [
       url: "https://res.cloudinary.com/dj5yf27lr/image/upload/v1717231164/spaceImagery/MarsImages/vhpofnvdzelswvgxdemh.png",
     },
   ];
+
+const typesOfMedia:{key:string,value:string}[] = [
+  {key:"All",value:"All"},
+  {key:"image",value:"Image"},
+  {key:"video",value:"Video"},
+  {key:"audio",value:"Audio"}
+]
+
+export default typesOfMedia;

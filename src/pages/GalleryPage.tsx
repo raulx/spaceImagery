@@ -15,15 +15,19 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
+  Select,
+  SelectItem,
   Spinner,
   useDisclosure,
 } from "@nextui-org/react";
 import { useState } from "react";
+import typesOfMedia from "../utils/data";
 import axios from "axios";
 
 function GalleryPage() {
   const [searchText, setSearchText] = useState<string>("apollo");
   const [description, setDescription] = useState("");
+  const [mediaType, setmediaType] = useState<string>("All");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [data, setData] = useState({
     collection: [
@@ -33,7 +37,7 @@ function GalleryPage() {
           {
             nasa_id: "2231",
             title: "This is title",
-            media_type: "",
+            media_type: "All",
             description: "This is description...",
           },
         ],
@@ -82,7 +86,19 @@ function GalleryPage() {
     }
     onOpen();
   };
+
+  const handleSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setmediaType(e.target.value);
+  };
   let render;
+
+  const filteredData = data.collection.filter((d) => {
+    if (mediaType === "All") {
+      return d;
+    } else if (d.data[0].media_type === mediaType) {
+      return d;
+    }
+  });
 
   if (data.isLoading) {
     render = (
@@ -99,12 +115,26 @@ function GalleryPage() {
   } else {
     render = (
       <>
-        <h1 className="text-center font-bold text-2xl my-2">
-          Total Results:{data.metadata.total_hits}
-        </h1>
+        <div className="flex justify-center gap-8 items-center w-11/12 mx-auto ">
+          <span className="text-center font-bold sm:text-2xl my-2">
+            Total Results:{data.metadata.total_hits}
+          </span>
+          <div className="w-48 my-4">
+            <Select
+              variant="bordered"
+              label="Media Type"
+              value={[mediaType]}
+              onChange={handleSelectionChange}
+            >
+              {typesOfMedia.map((media) => {
+                return <SelectItem key={media.key}>{media.value}</SelectItem>;
+              })}
+            </Select>
+          </div>
+        </div>
 
         <div className="p-4 flex gap-4 justify-center items-center flex-wrap bg-red-400">
-          {data.collection.map((d) => {
+          {filteredData.map((d) => {
             return (
               <Card className="w-[400px] min-h-[450px]">
                 <CardHeader>
