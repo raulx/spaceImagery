@@ -28,6 +28,7 @@ function GalleryPage() {
   const [searchText, setSearchText] = useState<string>("apollo");
   const [description, setDescription] = useState("");
   const [mediaType, setmediaType] = useState<string>("All");
+
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [data, setData] = useState({
     collection: [
@@ -47,6 +48,7 @@ function GalleryPage() {
     metadata: {
       total_hits: 1,
     },
+    links: [{ rel: "", prompt: "", href: "" }],
     isLoading: false,
     isError: false,
   });
@@ -68,6 +70,7 @@ function GalleryPage() {
             isLoading: false,
             collection: res.data.collection.items,
             metadata: res.data.collection.metadata,
+            links: res.data.collection.links,
           };
         });
       } catch (err) {
@@ -90,6 +93,34 @@ function GalleryPage() {
   const handleSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setmediaType(e.target.value);
   };
+
+  const handleClick = async (d: {
+    rel: string;
+    prompt: string;
+    href: string;
+  }) => {
+    const queryUrl = d.href;
+    try {
+      setData((prevValue) => {
+        return { ...prevValue, isLoading: true };
+      });
+      const res = await axios.get(queryUrl);
+      setData((prevValue) => {
+        return {
+          ...prevValue,
+          isLoading: false,
+          collection: res.data.collection.items,
+          metadata: res.data.collection.metadata,
+          links: res.data.collection.links,
+        };
+      });
+    } catch (error) {
+      setData((prevValue) => {
+        return { ...prevValue, isError: true };
+      });
+    }
+  };
+
   let render;
 
   const filteredData = data.collection.filter((d) => {
@@ -102,7 +133,7 @@ function GalleryPage() {
 
   if (data.isLoading) {
     render = (
-      <div className="w-screen flex justify-center items-center h-96">
+      <div className="w-screen flex justify-center items-center min-h-96">
         <Spinner size="lg" />
       </div>
     );
@@ -116,8 +147,9 @@ function GalleryPage() {
     render = (
       <>
         <div className="flex justify-center gap-8 items-center w-11/12 mx-auto ">
-          <span className="text-center font-bold sm:text-2xl my-2">
-            Total Results:{data.metadata.total_hits}
+          <span className="text-center font-bold  my-2">
+            Results Found:
+            {data.metadata.total_hits}
           </span>
           <div className="w-48 my-4">
             <Select
@@ -133,7 +165,7 @@ function GalleryPage() {
           </div>
         </div>
 
-        <div className="p-4 flex gap-4 justify-center items-center flex-wrap bg-red-400">
+        <div className="p-4 flex gap-4 justify-center min-h-[500px] items-center flex-wrap bg-red-400">
           {filteredData.map((d) => {
             return (
               <Card className="w-[400px] min-h-[450px]">
@@ -184,9 +216,21 @@ function GalleryPage() {
             );
           })}
         </div>
+        <div className="sm:w-1/2 mx-auto my-4 flex justify-center gap-4 items-center">
+          {data.links.map((d) => {
+            if (d.prompt) {
+              return (
+                <Button key={d.rel} onClick={() => handleClick(d)}>
+                  {d.prompt}
+                </Button>
+              );
+            }
+          })}
+        </div>
       </>
     );
   }
+
   return (
     <>
       <NavigationBar />
@@ -211,6 +255,7 @@ function GalleryPage() {
           </button>
         </div>
         <Divider className="my-4" />
+
         <div className="my-4">{render}</div>
       </main>
       <Footer />
