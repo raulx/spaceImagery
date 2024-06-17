@@ -1,4 +1,4 @@
-import { FaMicrophone, FaSearch } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 import Footer from "../components/Footer";
 import NavigationBar from "../components/NavigationBar";
 import {
@@ -25,10 +25,12 @@ import typesOfMedia from "../utils/data";
 import axios from "axios";
 
 function GalleryPage() {
-  const [searchText, setSearchText] = useState<string>("apollo");
+  const [searchText, setSearchText] = useState<string>("");
   const [description, setDescription] = useState("");
   const [mediaType, setmediaType] = useState<string>("All");
-
+  const [errorMessage, setErrorMessage] = useState<string>(
+    "Search The database."
+  );
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [data, setData] = useState({
     collection: [
@@ -36,17 +38,17 @@ function GalleryPage() {
         href: "",
         data: [
           {
-            nasa_id: "2231",
-            title: "This is title",
-            media_type: "All",
-            description: "This is description...",
+            nasa_id: "",
+            title: "",
+            media_type: "",
+            description: "",
           },
         ],
-        links: [{ href: "https://picsum.photos/200/300" }],
+        links: [{ href: "" }],
       },
     ],
     metadata: {
-      total_hits: 1,
+      total_hits: 0,
     },
     links: [{ rel: "", prompt: "", href: "" }],
     isLoading: false,
@@ -63,16 +65,26 @@ function GalleryPage() {
           return { ...prevValue, isLoading: true };
         });
         const res = await axios.get(url);
-
-        setData((prevValue) => {
-          return {
-            ...prevValue,
-            isLoading: false,
-            collection: res.data.collection.items,
-            metadata: res.data.collection.metadata,
-            links: res.data.collection.links,
-          };
-        });
+        console.log(res);
+        if (res.data.collection.items.length === 0) {
+          setErrorMessage("No Results found");
+          setData((prevValue) => {
+            return {
+              ...prevValue,
+              isLoading: false,
+            };
+          });
+        } else {
+          setData((prevValue) => {
+            return {
+              ...prevValue,
+              isLoading: false,
+              collection: res.data.collection.items,
+              metadata: res.data.collection.metadata,
+              links: res.data.collection.links,
+            };
+          });
+        }
       } catch (err) {
         setData((prevValue) => {
           return { ...prevValue, isError: true };
@@ -94,7 +106,7 @@ function GalleryPage() {
     setmediaType(e.target.value);
   };
 
-  const handleClick = async (d: {
+  const handlePageChange = async (d: {
     rel: string;
     prompt: string;
     href: string;
@@ -146,87 +158,97 @@ function GalleryPage() {
   } else {
     render = (
       <>
-        <div className="flex justify-center gap-8 items-center w-11/12 mx-auto ">
-          <span className="text-center font-bold  my-2">
-            Results Found:
-            {data.metadata.total_hits}
-          </span>
-          <div className="w-48 my-4">
-            <Select
-              variant="bordered"
-              label="Media Type"
-              value={[mediaType]}
-              onChange={handleSelectionChange}
-            >
-              {typesOfMedia.map((media) => {
-                return <SelectItem key={media.key}>{media.value}</SelectItem>;
-              })}
-            </Select>
-          </div>
-        </div>
+        {data.metadata.total_hits > 0 ? (
+          <>
+            <div className="flex justify-center gap-8 items-center w-11/12 mx-auto ">
+              <span className="text-center font-bold  my-2">
+                Results Found:
+                {data.metadata.total_hits}
+              </span>
+              <div className="w-48 my-4">
+                <Select
+                  variant="bordered"
+                  label="Media Type"
+                  value={[mediaType]}
+                  onChange={handleSelectionChange}
+                >
+                  {typesOfMedia.map((media) => {
+                    return (
+                      <SelectItem key={media.key}>{media.value}</SelectItem>
+                    );
+                  })}
+                </Select>
+              </div>
+            </div>
 
-        <div className="p-4 flex gap-4 justify-center min-h-[500px] items-center flex-wrap bg-red-400">
-          {filteredData.map((d) => {
-            return (
-              <Card className="w-[400px] min-h-[450px]">
-                <CardHeader>
-                  {d.links ? (
-                    <Image
-                      removeWrapper
-                      src={d.links[0].href}
-                      className="w-[400px] h-[250px] object-cover"
-                    />
-                  ) : (
-                    <Image
-                      removeWrapper
-                      className="w-[400px] h-[250px] object-contain"
-                      src="https://res.cloudinary.com/dj5yf27lr/image/upload/v1717836612/yfv3rrjmmiodj3et2pz0.png"
-                    />
-                  )}
-                </CardHeader>
-                <Divider />
-                <CardBody>
-                  <h1 className="font-bold">{d.data[0].title}</h1>
-                  <p className="text-sm my-4">
-                    {d.data[0]?.description?.substring(0, 100)}......
-                    <Button
-                      className="font-bold bg-transparent "
-                      onPress={() =>
-                        handleOpenDescription(d.data[0]?.description)
-                      }
-                    >
-                      Read More
+            <div className="p-4 flex gap-4 justify-center min-h-[500px] items-center flex-wrap bg-red-400">
+              {filteredData.map((d) => {
+                return (
+                  <Card className="w-[400px] min-h-[450px]">
+                    <CardHeader>
+                      {d.links ? (
+                        <Image
+                          removeWrapper
+                          src={d.links[0].href}
+                          className="w-[400px] h-[250px] object-cover"
+                        />
+                      ) : (
+                        <Image
+                          removeWrapper
+                          className="w-[400px] h-[250px] object-contain"
+                          src="https://res.cloudinary.com/dj5yf27lr/image/upload/v1717836612/yfv3rrjmmiodj3et2pz0.png"
+                        />
+                      )}
+                    </CardHeader>
+                    <Divider />
+                    <CardBody>
+                      <h1 className="font-bold">{d.data[0].title}</h1>
+                      <p className="text-sm my-4">
+                        {d.data[0]?.description?.substring(0, 100)}......
+                        <Button
+                          className="font-bold bg-transparent "
+                          onPress={() =>
+                            handleOpenDescription(d.data[0]?.description)
+                          }
+                        >
+                          Read More
+                        </Button>
+                      </p>
+                      <div className="flex justify-between items-center">
+                        <span>
+                          Media Type:
+                          <span className="font-bold uppercase">
+                            {d.data[0]?.media_type}
+                          </span>
+                        </span>
+                      </div>
+                    </CardBody>
+                    <CardFooter>
+                      <Button size="sm" color="secondary">
+                        Open
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                );
+              })}
+            </div>
+            <div className="sm:w-1/2 mx-auto my-4 flex justify-center gap-4 items-center">
+              {data.links?.map((d) => {
+                if (d.prompt) {
+                  return (
+                    <Button key={d.rel} onClick={() => handlePageChange(d)}>
+                      {d.prompt}
                     </Button>
-                  </p>
-                  <div className="flex justify-between items-center">
-                    <span>
-                      Media Type:
-                      <span className="font-bold uppercase">
-                        {d.data[0]?.media_type}
-                      </span>
-                    </span>
-                  </div>
-                </CardBody>
-                <CardFooter>
-                  <Button size="sm" color="secondary">
-                    Open
-                  </Button>
-                </CardFooter>
-              </Card>
-            );
-          })}
-        </div>
-        <div className="sm:w-1/2 mx-auto my-4 flex justify-center gap-4 items-center">
-          {data.links.map((d) => {
-            if (d.prompt) {
-              return (
-                <Button key={d.rel} onClick={() => handleClick(d)}>
-                  {d.prompt}
-                </Button>
-              );
-            }
-          })}
-        </div>
+                  );
+                }
+              })}
+            </div>
+          </>
+        ) : (
+          <div className="flex justify-center items-center min-h-96">
+            <h1 className="text-2xl font-bold">{errorMessage}</h1>
+          </div>
+        )}
       </>
     );
   }
@@ -249,9 +271,6 @@ function GalleryPage() {
             onClick={handleSearch}
           >
             <FaSearch />
-          </button>
-          <button className="p-2 bg-gray-50 rounded-full">
-            <FaMicrophone />
           </button>
         </div>
         <Divider className="my-4" />
