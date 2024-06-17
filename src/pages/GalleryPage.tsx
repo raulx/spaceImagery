@@ -23,37 +23,27 @@ import {
 import { useState } from "react";
 import typesOfMedia from "../utils/data";
 import axios from "axios";
+import {
+  AppDispatch,
+  RootState,
+  fetchQueryDataError,
+  fetchQueryDataStart,
+  fetchQueryDataSuccess,
+} from "../store/store";
+import { useDispatch, useSelector } from "react-redux";
 
 function GalleryPage() {
   const [searchText, setSearchText] = useState<string>("");
   const [description, setDescription] = useState("");
   const [mediaType, setmediaType] = useState<string>("All");
-  const [errorMessage, setErrorMessage] = useState<string>(
-    "Search The database."
-  );
+
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [data, setData] = useState({
-    collection: [
-      {
-        href: "",
-        data: [
-          {
-            nasa_id: "",
-            title: "",
-            media_type: "",
-            description: "",
-          },
-        ],
-        links: [{ href: "" }],
-      },
-    ],
-    metadata: {
-      total_hits: 0,
-    },
-    links: [{ rel: "", prompt: "", href: "" }],
-    isLoading: false,
-    isError: false,
-  });
+  const dispatch: AppDispatch = useDispatch();
+
+  const { collection, metadata, links, isLoading, isError, errorMessage } =
+    useSelector((state: RootState) => {
+      return state.queryData;
+    });
 
   const handleSearch = async () => {
     const url = `https://images-api.nasa.gov/search?q=${searchText}`;
@@ -61,34 +51,16 @@ function GalleryPage() {
       console.log("select a text");
     } else {
       try {
-        setData((prevValue) => {
-          return { ...prevValue, isLoading: true };
-        });
+        dispatch(fetchQueryDataStart());
         const res = await axios.get(url);
-        console.log(res);
+
         if (res.data.collection.items.length === 0) {
-          setErrorMessage("No Results found");
-          setData((prevValue) => {
-            return {
-              ...prevValue,
-              isLoading: false,
-            };
-          });
+          dispatch(fetchQueryDataError("Search The Database."));
         } else {
-          setData((prevValue) => {
-            return {
-              ...prevValue,
-              isLoading: false,
-              collection: res.data.collection.items,
-              metadata: res.data.collection.metadata,
-              links: res.data.collection.links,
-            };
-          });
+          dispatch(fetchQueryDataSuccess(res.data.collection));
         }
       } catch (err) {
-        setData((prevValue) => {
-          return { ...prevValue, isError: true };
-        });
+        dispatch(fetchQueryDataError("Unknown Error !!"));
       }
     }
   };
@@ -113,29 +85,19 @@ function GalleryPage() {
   }) => {
     const queryUrl = d.href;
     try {
-      setData((prevValue) => {
-        return { ...prevValue, isLoading: true };
-      });
+      dispatch(fetchQueryDataStart());
+
       const res = await axios.get(queryUrl);
-      setData((prevValue) => {
-        return {
-          ...prevValue,
-          isLoading: false,
-          collection: res.data.collection.items,
-          metadata: res.data.collection.metadata,
-          links: res.data.collection.links,
-        };
-      });
+
+      dispatch(fetchQueryDataSuccess(res.data.collection));
     } catch (error) {
-      setData((prevValue) => {
-        return { ...prevValue, isError: true };
-      });
+      dispatch(fetchQueryDataError("Unknown Error occured"));
     }
   };
 
   let render;
 
-  const filteredData = data.collection.filter((d) => {
+  const filteredData = collection.filter((d) => {
     if (mediaType === "All") {
       return d;
     } else if (d.data[0].media_type === mediaType) {
@@ -143,13 +105,13 @@ function GalleryPage() {
     }
   });
 
-  if (data.isLoading) {
+  if (isLoading) {
     render = (
       <div className="w-screen flex justify-center items-center min-h-96">
         <Spinner size="lg" />
       </div>
     );
-  } else if (data.isError) {
+  } else if (isError) {
     render = (
       <div className="w-screen flex justify-center items-center h-96">
         <div className="w-48 h-48 bg-yellow-400">Error Occured</div>
@@ -158,12 +120,12 @@ function GalleryPage() {
   } else {
     render = (
       <>
-        {data.metadata.total_hits > 0 ? (
+        {metadata.total_hits > 0 ? (
           <>
             <div className="flex justify-center gap-8 items-center w-11/12 mx-auto ">
               <span className="text-center font-bold  my-2">
                 Results Found:
-                {data.metadata.total_hits}
+                {metadata.total_hits}
               </span>
               <div className="w-48 my-4">
                 <Select
@@ -233,7 +195,7 @@ function GalleryPage() {
               })}
             </div>
             <div className="sm:w-1/2 mx-auto my-4 flex justify-center gap-4 items-center">
-              {data.links?.map((d) => {
+              {links?.map((d) => {
                 if (d.prompt) {
                   return (
                     <Button key={d.rel} onClick={() => handlePageChange(d)}>
