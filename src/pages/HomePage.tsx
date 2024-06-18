@@ -34,7 +34,7 @@ function HomePage() {
             })}
           </div>
 
-          <Button className="bg-white font-bold border-2 rounded-lg w-1/6 mx-auto">
+          <Button className="bg-white font-bold border-2 rounded-lg sm:w-1/6 w-1/3 mx-auto">
             <Link to={"/mars"}>Explore More</Link>
           </Button>
         </section>

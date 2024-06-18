@@ -11,6 +11,7 @@ import { handleOpenFullImage } from "../utils/functions";
 import {
   AppDispatch,
   RootState,
+  fetchApodDataError,
   fetchApodDataStart,
   fetchApodDataSuccess,
 } from "../store/store";
@@ -20,7 +21,7 @@ const apiKey = import.meta.env.VITE_API_KEY;
 function Apod() {
   const dispatch: AppDispatch = useDispatch();
 
-  const { data, isFetching } = useSelector((state: RootState) => {
+  const { data, isFetching, isError } = useSelector((state: RootState) => {
     return state.apod;
   });
 
@@ -35,13 +36,7 @@ function Apod() {
         );
         dispatch(fetchApodDataSuccess(response.data));
       } catch (err: unknown) {
-        if (err instanceof Error) {
-          navigate("/error", { state: { errorMessage: err.message } });
-        } else {
-          navigate("/error", {
-            state: { errorMessage: "An Unknown error occured" },
-          });
-        }
+        dispatch(fetchApodDataError());
       }
     };
     getData();
@@ -60,6 +55,8 @@ function Apod() {
         </div>
       </div>
     );
+  } else if (isError) {
+    content = null;
   } else if (data) {
     content = (
       <section className="w-full sm:min-h-96 bg-[#353564] rounded-lg grid sm:grid-cols-2 grid-cols-1 gap-8 sm:px-4 px-2 py-6">
@@ -107,8 +104,6 @@ function Apod() {
         </div>
       </section>
     );
-  } else {
-    content = null;
   }
 
   return <>{content}</>;
