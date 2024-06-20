@@ -1,5 +1,4 @@
 /* eslint-disable react-refresh/only-export-components */
-
 import ReactDOM from "react-dom/client";
 import { lazy, Suspense } from "react";
 import "./index.css";
@@ -7,8 +6,8 @@ import { Provider } from "react-redux";
 import store from "./store/store.tsx";
 import { NextUIProvider } from "@nextui-org/react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-
 import { Spinner } from "@nextui-org/react";
+
 const App = lazy(() => import("./App.tsx"));
 const HomePage = lazy(() => import("./pages/HomePage.tsx"));
 const MarsImagesPage = lazy(() => import("./pages/MarsImagesPage.tsx"));
@@ -33,7 +32,10 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> },
       { path: "/mars", element: <MarsImagesPage /> },
-      { path: "/gallery", element: <GalleryPage /> },
+      {
+        path: "/gallery",
+        element: <GalleryPage />,
+      },
     ],
   },
   {
