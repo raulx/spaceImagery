@@ -30,13 +30,17 @@ function MediaBox() {
     href: string;
   }) => {
     const queryUrl = d.href;
+    //slice the query url and make it https instead of http because http causes issue in production.
+    const slicedQueryUrl = `https://${queryUrl.slice(7)}`;
+
     try {
       dispatch(fetchQueryDataStart());
 
-      const res = await axios.get(queryUrl);
+      const res = await axios.get(slicedQueryUrl);
 
       dispatch(fetchQueryDataSuccess(res.data.collection));
     } catch (error) {
+      console.log(error);
       dispatch(fetchQueryDataError("Unknown Error occured"));
     }
   };
