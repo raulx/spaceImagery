@@ -91,7 +91,7 @@ function MediaBox() {
 
             <div className="p-4 flex gap-4 justify-center min-h-[500px] items-center flex-wrap bg-red-400">
               {filteredData.map((d) => {
-                return <AssetCard d={d} />;
+                return <AssetCard key={d.href} d={d} />;
               })}
             </div>
             <div className="sm:w-1/2 mx-auto my-4 flex justify-center gap-4 items-center">

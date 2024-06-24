@@ -2,6 +2,7 @@ import { Card, CardHeader, CardBody, Button, Image } from "@nextui-org/react";
 import axios from "axios";
 import { useState } from "react";
 import { FaPlay } from "react-icons/fa";
+import ReactPlayer from "react-player/lazy";
 
 interface assetData {
   href: string;
@@ -11,6 +12,7 @@ interface assetData {
 interface AssetDataProp {
   d: assetData;
 }
+
 
 function AssetCard(props: AssetDataProp) {
   const { d } = props;
@@ -25,13 +27,10 @@ function AssetCard(props: AssetDataProp) {
     setMp4Link(mp4Link);
   };
   return (
-    <Card className="w-[400px] min-h-[400px] ">
+    <Card className="w-[400px] min-h-[400px]">
       <CardHeader>
         {mp4Link ? (
-          <video width="400" height="250" controls>
-            <source src={mp4Link} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
+          <ReactPlayer url={mp4Link} controls={true} />
         ) : (
           <>
             {d.links ? (
