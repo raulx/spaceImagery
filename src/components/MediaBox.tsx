@@ -92,12 +92,18 @@ function MediaBox() {
                 </Select>
               </div>
             </div>
+            {filteredData.length > 0 ? (
+              <div className="p-4 flex gap-4 justify-center min-h-[500px] items-center flex-wrap bg-red-400">
+                {filteredData.map((d) => {
+                  return <AssetCard key={d.href} d={d} />;
+                })}
+              </div>
+            ) : (
+              <div className="text-3xl font-bold text-center my-12">
+                No Match Found For Media Type {mediaType}, Change Page !!!
+              </div>
+            )}
 
-            <div className="p-4 flex gap-4 justify-center min-h-[500px] items-center flex-wrap bg-red-400">
-              {filteredData.map((d) => {
-                return <AssetCard key={d.href} d={d} />;
-              })}
-            </div>
             <div className="sm:w-1/2 mx-auto my-4 flex justify-center gap-4 items-center">
               {links?.map((d) => {
                 if (d.prompt) {
