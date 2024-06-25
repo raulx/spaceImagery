@@ -22,30 +22,44 @@ interface AssetDataProp {
 
 function AssetCard(props: AssetDataProp) {
   const { d } = props;
-  const [mp4Link, setMp4Link] = useState("");
+  const [mediaLink, setMediaLink] = useState("");
   const [videoLoading, setVideoLoading] = useState(false);
 
+  const mediaType = d.data[0]?.media_type;
+
+  // src="https://res.cloudinary.com/dj5yf27lr/image/upload/v1717836612/yfv3rrjmmiodj3et2pz0.png"
   const handleClick = async () => {
     setVideoLoading(true);
     const res = await axios.get(d.href);
-    // Find the first .mp4 link
-    const mp4Link = res.data.find((link: string) => link.endsWith(".mp4"));
-
-    setMp4Link(mp4Link);
+    let newLink;
+    if (mediaType === "video") {
+      // Find the first .mp4 link
+      newLink = res.data.find((link: string) => link.endsWith(".mp4"));
+    } else if (mediaType === "audio") {
+      //Find the first .mp3 link
+      newLink = res.data.find((link: string) => link.endsWith("128k.mp3"));
+    }
+    console.log(res);
+    console.log(newLink);
+    setMediaLink(newLink);
     setVideoLoading(false);
   };
 
   return (
     <Card className="w-[400px] min-h-[400px]">
       <CardHeader>
-        {mp4Link ? (
+        {mediaLink ? (
           <div className="relative w-full h-[250px]">
             <ReactPlayer
-              url={mp4Link}
+              url={mediaLink}
               controls={true}
               light={
                 <img
-                  src={d.links[0].href}
+                  src={
+                    d.links
+                      ? d.links[0].href
+                      : "https://res.cloudinary.com/dj5yf27lr/image/upload/v1719301878/spaceImagery/rl7zqrmxjdq6piw0qwvn.jpg"
+                  }
                   height={400}
                   alt="Thumbnail"
                   className="h-full w-full"
@@ -72,7 +86,7 @@ function AssetCard(props: AssetDataProp) {
                   <Image
                     removeWrapper
                     className="h-full w-full object-contain"
-                    src="https://res.cloudinary.com/dj5yf27lr/image/upload/v1717836612/yfv3rrjmmiodj3et2pz0.png"
+                    src="https://res.cloudinary.com/dj5yf27lr/image/upload/v1719301878/spaceImagery/rl7zqrmxjdq6piw0qwvn.jpg"
                   />
                 )}
               </>
@@ -84,14 +98,13 @@ function AssetCard(props: AssetDataProp) {
       <CardBody>
         <h1 className="font-bold">{d.data[0].title}</h1>
         <div className="flex justify-between items-center px-4 py-2 w-full">
-          <span className=" font-KneWave">
-            Media Type : {d.data[0]?.media_type}
-          </span>
-          {d.data[0]?.media_type === "video" && (
+          <span className=" font-KneWave">Media Type : {mediaType}</span>
+
+          {mediaType === "video" || mediaType === "audio" ? (
             <Button color="secondary" size="sm" onClick={handleClick}>
               <FaPlay />
             </Button>
-          )}
+          ) : null}
         </div>
       </CardBody>
     </Card>
