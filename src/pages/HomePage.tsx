@@ -18,7 +18,7 @@ function HomePage() {
         <Divider />
         <section className="w-full bg-[#F6F6FF] flex flex-col rounded-lg p-4">
           <h1 className=" font-KronaOne  text-center my-4 uppercase tracking-wide">
-            Explore Mars Rover Images
+            Explore Mars Images
           </h1>
           <Divider />
           <div className="flex w-full items-center justify-between my-4 flex-wrap  sm:gap-4 gap-8 sm:p-4">
