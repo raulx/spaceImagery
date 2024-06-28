@@ -63,8 +63,8 @@ function MediaBox() {
     );
   } else if (isError) {
     render = (
-      <div className="w-screen flex justify-center items-center h-96">
-        <div className="w-48 h-48 bg-yellow-400">Error Occured</div>
+      <div className="flex justify-center items-center min-h-96">
+        <h1 className="text-2xl font-bold">{errorMessage}</h1>
       </div>
     );
   } else {
