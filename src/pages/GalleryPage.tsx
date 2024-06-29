@@ -11,7 +11,7 @@ function GalleryPage() {
       <NavigationBar />
       <main className="min-h-[800px]">
         <MediaSearchBox />
-        <Divider className="my-4" />
+        <Divider />
         <MediaBox />
       </main>
       <Footer />

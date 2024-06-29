@@ -36,13 +36,13 @@ interface MarsImagesSelectBoxProps {
   setIsLatest: React.Dispatch<SetStateAction<boolean>>;
   setTotalPages: React.Dispatch<SetStateAction<number>>;
   setCurrentPage: React.Dispatch<SetStateAction<number>>;
-  setTotalPhotos: React.Dispatch<SetStateAction<number>>;
 }
 
 function MarsImagesSelectBox(props: MarsImagesSelectBoxProps) {
   const { data } = useSelector((state: RootState) => {
     return state.marsImages;
   });
+
   const {
     isLatest,
     roverType,
@@ -51,7 +51,7 @@ function MarsImagesSelectBox(props: MarsImagesSelectBoxProps) {
     setRoverType,
     setIsLatest,
     setTotalPages,
-    setTotalPhotos,
+
     setCurrentPage,
   } = props;
 
@@ -74,7 +74,7 @@ function MarsImagesSelectBox(props: MarsImagesSelectBoxProps) {
             metaData.data.photos?.length ||
             metaData.data.latest_photos?.length ||
             0;
-          setTotalPhotos(totalPhotos);
+
           const totalPages = Math.floor(totalPhotos / 25 + 1);
           setTotalPages(totalPages);
         }

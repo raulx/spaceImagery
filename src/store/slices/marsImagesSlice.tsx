@@ -42,7 +42,9 @@ const marsImagesSlice = createSlice({
       state.isLoading = true;
     },
     fetchMarsImageDataSuccess(state, action: PayloadAction<MarsImagesData>) {
-      (state.data = action.payload), (state.isLoading = false);
+      (state.data = action.payload),
+        (state.isLoading = false),
+        (state.isError = false);
     },
     fetchMarsImageDataError(state) {
       state.isError = true;

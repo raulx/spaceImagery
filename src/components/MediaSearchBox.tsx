@@ -37,16 +37,17 @@ function MediaSearchBox() {
   return (
     <form
       onSubmit={handleSubmit(handleSearch)}
-      className=" p-4 sm:w-11/12 mx-auto flex items-center justify-center gap-4"
+      className="my-2 sm:w-11/12 mx-auto flex items-center justify-center h-12 sm:px-0 px-2"
     >
       <input
-        {...register("searchText")}
-        placeholder="Search NASA Media Libraray of Image,Video Audio"
-        className="px-4 py-2 w-1/2 rounded-xl border-2"
+        {...register("searchText", { required: true })}
+        placeholder="Search NASA Media"
+        autoFocus
+        className="px-4 py-2 rounded-l-2xl border-2 sm:w-1/2 w-full h-full "
       />
       <button
         type="submit"
-        className="px-4 py-2 border-2 rounded-lg bg-gray-100"
+        className="h-full w-16 border-2 border-l-0 rounded-r-2xl flex justify-center items-center bg-[#FFF6F6]"
       >
         <FaSearch />
       </button>

@@ -12,7 +12,6 @@ import MarsImagesBox from "../components/MarsImagesBox";
 function MarsImagesPage() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
-  const [totalPhotos, setTotalPhotos] = useState<number>(0);
   const [roverType, setRoverType] = useState<string>("curiosity");
   const [isLatest, setIsLatest] = useState<boolean>(true);
   const [sol, setSol] = useState<string>("1");
@@ -34,13 +33,15 @@ function MarsImagesPage() {
           setRoverType={setRoverType}
           setIsLatest={setIsLatest}
           setTotalPages={setTotalPages}
-          setTotalPhotos={setTotalPhotos}
           setCurrentPage={setCurrentPage}
         />
         <Divider className="my-6" />
-        <h1 className="text-center sm:my-6 my-4 font-bold uppercase sm:text-xl font-KronaOne">
+        {/* <h1 className="text-center sm:my-6 my-4 font-bold uppercase sm:text-xl font-KronaOne">
           Total Photos:{totalPhotos}
-        </h1>
+        </h1> */}
+
+        <MarsImagesBox />
+
         {!isError && (
           <MarsImagesPagination
             isLatest={isLatest}
@@ -51,7 +52,6 @@ function MarsImagesPage() {
             sol={sol}
           />
         )}
-        <MarsImagesBox />
       </main>
 
       <Footer />
