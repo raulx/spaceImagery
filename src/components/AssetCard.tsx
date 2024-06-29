@@ -27,7 +27,6 @@ function AssetCard(props: AssetDataProp) {
 
   const mediaType = d.data[0]?.media_type;
 
-  // src="https://res.cloudinary.com/dj5yf27lr/image/upload/v1717836612/yfv3rrjmmiodj3et2pz0.png"
   const handleClick = async () => {
     setVideoLoading(true);
     const res = await axios.get(d.href);
@@ -39,14 +38,12 @@ function AssetCard(props: AssetDataProp) {
       //Find the first .mp3 link
       newLink = res.data.find((link: string) => link.endsWith("128k.mp3"));
     }
-    console.log(res);
-    console.log(newLink);
     setMediaLink(newLink);
     setVideoLoading(false);
   };
 
   return (
-    <Card className="w-[400px] min-h-[400px]">
+    <Card className="w-[400px] h-[400px]">
       <CardHeader>
         {mediaLink ? (
           <div className="relative w-full h-[250px]">
@@ -96,7 +93,7 @@ function AssetCard(props: AssetDataProp) {
       </CardHeader>
 
       <CardBody>
-        <h1 className="font-bold">{d.data[0].title}</h1>
+        <h1 className="font-bold ">{d.data[0].title}</h1>
         <div className="flex justify-between items-center px-4 py-2 w-full">
           <span className=" font-KneWave">Media Type : {mediaType}</span>
 

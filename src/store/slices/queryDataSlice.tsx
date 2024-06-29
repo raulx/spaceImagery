@@ -55,6 +55,7 @@ const queryDataSlice = createSlice({
     },
     fetchQueryDataSuccess(state, action) {
       state.isLoading = false;
+      state.isError = false;
       (state.collection = action.payload.items),
         (state.links = action.payload.links),
         (state.metadata = action.payload.metadata);

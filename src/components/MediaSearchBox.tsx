@@ -1,4 +1,4 @@
-import { Input } from "@nextui-org/react";
+import { useForm, SubmitHandler } from "react-hook-form";
 import axios from "axios";
 import { FaSearch } from "react-icons/fa";
 import {
@@ -8,45 +8,49 @@ import {
   AppDispatch,
 } from "../store/store";
 import { useDispatch } from "react-redux";
-import { useState } from "react";
+
+type Input = {
+  searchText: string;
+};
 
 function MediaSearchBox() {
   const dispatch: AppDispatch = useDispatch();
-  const [searchText, setSearchText] = useState<string>("");
+  const { register, handleSubmit } = useForm<Input>();
 
-  const handleSearch = async () => {
-    const url = `https://images-api.nasa.gov/search?q=${searchText}`;
-    if (searchText === "") {
-      console.log("select a text");
-    } else {
-      try {
-        dispatch(fetchQueryDataStart());
-        const res = await axios.get(url);
-
-        if (res.data.collection.items.length === 0) {
-          dispatch(fetchQueryDataError(`No Data Found for query:${searchText}`));
-        } else {
-          dispatch(fetchQueryDataSuccess(res.data.collection));
-        }
-      } catch (err) {
-        dispatch(fetchQueryDataError("Unknown Error !!"));
+  const handleSearch: SubmitHandler<Input> = async (data) => {
+    const url = `https://images-api.nasa.gov/search?q=${data.searchText}`;
+    try {
+      dispatch(fetchQueryDataStart());
+      const res = await axios.get(url);
+      if (res.data.collection.items.length === 0) {
+        dispatch(
+          fetchQueryDataError(`No Data Found for query:${data.searchText}`)
+        );
+      } else {
+        dispatch(fetchQueryDataSuccess(res.data.collection));
       }
+    } catch (err) {
+      dispatch(fetchQueryDataError("Unknown Error !!"));
     }
   };
+
   return (
-    <div className="sm:w-1/3 w-11/12 mx-auto flex justify-center items-center p-2 border-2 gap-2 rounded-lg my-2">
-      <Input
-        variant="bordered"
-        placeholder="Search Media"
-        radius="sm"
-        value={searchText}
-        onValueChange={setSearchText}
-        className="focus:outline-none"
+    <form
+      onSubmit={handleSubmit(handleSearch)}
+      className=" p-4 sm:w-11/12 mx-auto flex items-center justify-center gap-4"
+    >
+      <input
+        {...register("searchText")}
+        placeholder="Search NASA Media Libraray of Image,Video Audio"
+        className="px-4 py-2 w-1/2 rounded-xl border-2"
       />
-      <button className="p-2 bg-gray-200 rounded-full" onClick={handleSearch}>
+      <button
+        type="submit"
+        className="px-4 py-2 border-2 rounded-lg bg-gray-100"
+      >
         <FaSearch />
       </button>
-    </div>
+    </form>
   );
 }
 
