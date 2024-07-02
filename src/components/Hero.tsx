@@ -13,8 +13,7 @@ export default function Hero() {
     autoplaySpeed: 3000,
     arrows: false,
   };
-  // const videoLink =
-  //   "https://images-assets.nasa.gov/video/T803303_A_AS-503-APOLLO-8-CREW-DEPARTING-MSOB-ENROUTE-TO-PAD-39A/T803303_A_AS-503-APOLLO-8-CREW-DEPARTING-MSOB-ENROUTE-TO-PAD-39A~preview.mp4";
+
   const slidesData = [
     {
       id: 1,
@@ -63,11 +62,10 @@ export default function Hero() {
           Explore Nasa’s Official Images and Videos Data, collecting on
           different missions, search any topic and get media content .
         </p>
-        <Link to={"/gallery"}>
-          <Button className="w-1/5 mx-auto  bg-white border font-bold">
-            Explore
-          </Button>
-        </Link>
+
+        <Button className="w-1/5 mx-auto  bg-white border font-bold">
+          <Link to={"/gallery"}>Explore</Link>
+        </Button>
       </div>
       <div className="w-full sm:order-2 order-1 sm:pt-4 p-2 sm:pr-4">
         <Slider {...settings}>

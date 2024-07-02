@@ -37,7 +37,7 @@ function MediaSearchBox() {
   return (
     <form
       onSubmit={handleSubmit(handleSearch)}
-      className="my-2 sm:w-11/12 mx-auto flex items-center justify-center h-12 sm:px-0 px-2"
+      className="my-2 sm:w-11/12 mx-auto flex items-center justify-center sm:h-12 h-10 sm:px-0 px-2"
     >
       <input
         {...register("searchText", { required: true })}
@@ -47,7 +47,7 @@ function MediaSearchBox() {
       />
       <button
         type="submit"
-        className="h-full w-16 border-2 border-l-0 rounded-r-full flex justify-center items-center bg-[#FFF6F6]"
+        className="h-full w-16  border-2 border-l-0 rounded-r-full flex justify-center items-center bg-[#FFF6F6]"
       >
         <FaSearch />
       </button>

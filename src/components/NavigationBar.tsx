@@ -64,27 +64,29 @@ function NavigationBar() {
         </NavbarBrand>
       </NavbarContent>
       <NavbarContent justify="end" className="sm:flex hidden">
-        {pages.map((page) => {
-          return (
-            <NavbarItem key={page.name}>
-              <Link
-                to={page.path}
-                className={`uppercase text-black ${
-                  activeLink === page.name && "font-bold"
-                }`}
-              >
-                {page.name}
-              </Link>
-            </NavbarItem>
-          );
-        })}
+        <div className="flex gap-6 items-center bg-white rounded-full shadow-sm px-8 py-2">
+          {pages.map((page) => {
+            return (
+              <NavbarItem key={page.name}>
+                <Link
+                  to={page.path}
+                  className={`capitalize text-lg tracking-widest text-[#353564] hover:text-[#353564] transition-all  ${
+                    activeLink === page.name && "text-[#353564] font-bold"
+                  }`}
+                >
+                  {page.name}
+                </Link>
+              </NavbarItem>
+            );
+          })}
+        </div>
       </NavbarContent>
       {/* mobile screen  */}
       <NavbarContent className="sm:hidden">
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
         />
-        <span className=" font-KronaOne text-xs font-bold uppercase tracking-widest mx-8 px-4 py-2 bg-white rounded-full">
+        <span className="font-KronaOne text-xs font-bold uppercase tracking-widest mx-8 px-4 py-2 bg-white rounded-full">
           Space Imagery
         </span>
       </NavbarContent>
