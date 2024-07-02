@@ -1,4 +1,4 @@
-import { Spinner, Select, SelectItem, Button } from "@nextui-org/react";
+import { Spinner, Button, RadioGroup, Radio } from "@nextui-org/react";
 import typesOfMedia from "../utils/data";
 import {
   AppDispatch,
@@ -20,15 +20,12 @@ function MediaBox() {
       return state.queryData;
     });
 
-  const handleSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setmediaType(e.target.value);
-  };
-
   const handlePageChange = async (d: {
     rel: string;
     prompt: string;
     href: string;
   }) => {
+    setmediaType("All");
     const queryUrl = d.href;
     //slice the query url and make it https instead of http because http causes issue in production.
     const slicedQueryUrl = `https://${queryUrl.slice(7)}`;
@@ -72,25 +69,19 @@ function MediaBox() {
       <>
         {metadata.total_hits > 0 ? (
           <>
-            <div className="flex justify-center gap-8 items-center w-11/12 mx-auto ">
-              <span className="text-center font-bold  my-2">
-                Results Found:
-                {metadata.total_hits}
-              </span>
-              <div className="w-48 my-4">
-                <Select
-                  variant="bordered"
-                  label="Media Type"
-                  value={[mediaType]}
-                  onChange={handleSelectionChange}
-                >
-                  {typesOfMedia.map((media) => {
-                    return (
-                      <SelectItem key={media.key}>{media.value}</SelectItem>
-                    );
-                  })}
-                </Select>
-              </div>
+            <div className="py-4 flex justify-center items-center ">
+              <RadioGroup
+                label="Select Media Type"
+                value={mediaType}
+                orientation="horizontal"
+                onValueChange={setmediaType}
+              >
+                {typesOfMedia.map((media) => (
+                  <Radio key={media.key} value={media.key}>
+                    {media.value}
+                  </Radio>
+                ))}
+              </RadioGroup>
             </div>
             {filteredData.length > 0 ? (
               <div className="p-4 flex gap-4 justify-center min-h-[500px] items-center flex-wrap bg-red-400">
@@ -124,7 +115,7 @@ function MediaBox() {
       </>
     );
   }
-  return <div className="my-4">{render}</div>;
+  return <div>{render}</div>;
 }
 
 export default MediaBox;

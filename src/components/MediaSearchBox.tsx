@@ -43,11 +43,11 @@ function MediaSearchBox() {
         {...register("searchText", { required: true })}
         placeholder="Search NASA Media"
         autoFocus
-        className="px-4 py-2 rounded-l-2xl border-2 sm:w-1/2 w-full h-full "
+        className="px-4 py-2 rounded-l-full border-2 sm:w-1/2 w-full h-full "
       />
       <button
         type="submit"
-        className="h-full w-16 border-2 border-l-0 rounded-r-2xl flex justify-center items-center bg-[#FFF6F6]"
+        className="h-full w-16 border-2 border-l-0 rounded-r-full flex justify-center items-center bg-[#FFF6F6]"
       >
         <FaSearch />
       </button>

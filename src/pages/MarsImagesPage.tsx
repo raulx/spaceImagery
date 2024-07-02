@@ -35,11 +35,7 @@ function MarsImagesPage() {
           setTotalPages={setTotalPages}
           setCurrentPage={setCurrentPage}
         />
-        <Divider className="my-6" />
-        {/* <h1 className="text-center sm:my-6 my-4 font-bold uppercase sm:text-xl font-KronaOne">
-          Total Photos:{totalPhotos}
-        </h1> */}
-
+        <Divider />
         <MarsImagesBox />
 
         {!isError && (

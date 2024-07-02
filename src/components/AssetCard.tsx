@@ -43,7 +43,7 @@ function AssetCard(props: AssetDataProp) {
   };
 
   return (
-    <Card className="w-[400px] h-[400px]">
+    <Card className="w-[400px] h-[440px]">
       <CardHeader>
         {mediaLink ? (
           <div className="relative w-full h-[250px]">
