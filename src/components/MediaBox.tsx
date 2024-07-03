@@ -25,7 +25,6 @@ function MediaBox() {
     prompt: string;
     href: string;
   }) => {
-    setmediaType("All");
     const queryUrl = d.href;
     //slice the query url and make it https instead of http because http causes issue in production.
     const slicedQueryUrl = `https://${queryUrl.slice(7)}`;
