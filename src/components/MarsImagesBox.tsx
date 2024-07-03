@@ -82,7 +82,7 @@ function MarsImagesBox() {
       </div>
     );
   }
-  return <div className="min-h-96 bg-[#F6F6FF]">{render}</div>;
+  return <div className="min-h-[600px] bg-[#F6F6FF] my-4">{render}</div>;
 }
 
 export default MarsImagesBox;
