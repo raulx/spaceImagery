@@ -72,7 +72,7 @@ function NavigationBar() {
                 <Link
                   to={page.path}
                   className={`capitalize text-lg tracking-widest text-white transition-all  ${
-                    activeLink === page.name && "text-[#353564] font-bold"
+                    activeLink === page.name && "text-2xl border-b-1 font-bold"
                   }`}
                 >
                   {page.name}

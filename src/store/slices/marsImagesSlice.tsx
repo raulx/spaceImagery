@@ -5,6 +5,7 @@ interface marsImagesDataState {
   data: MarsImagesData;
   isLoading: boolean;
   isError: boolean;
+  errorMessage: string;
 }
 
 const initialState: marsImagesDataState = {
@@ -32,6 +33,7 @@ const initialState: marsImagesDataState = {
 
   isLoading: false,
   isError: false,
+  errorMessage: "",
 };
 
 const marsImagesSlice = createSlice({
@@ -46,7 +48,9 @@ const marsImagesSlice = createSlice({
         (state.isLoading = false),
         (state.isError = false);
     },
-    fetchMarsImageDataError(state) {
+    fetchMarsImageDataError(state, action: PayloadAction<string>) {
+      state.isLoading = false;
+      state.errorMessage = action.payload;
       state.isError = true;
     },
   },

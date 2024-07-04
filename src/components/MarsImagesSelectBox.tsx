@@ -85,7 +85,9 @@ function MarsImagesSelectBox(props: MarsImagesSelectBoxProps) {
           photos = res.data.latest_photos;
         } else {
           if (res.data.photos.length === 0) {
-            throw new Error("Data is empty");
+            throw new Error(
+              `No Photos Were taken by rover ${roverType} on sol ${sol}`
+            );
           } else {
             photos = res.data.photos;
           }
@@ -94,7 +96,15 @@ function MarsImagesSelectBox(props: MarsImagesSelectBoxProps) {
         dispatch(fetchMarsImageDataSuccess({ photos: photos }));
         setCurrentPage(1);
       } catch (err) {
-        dispatch(fetchMarsImageDataError());
+        if (err instanceof Error) {
+          dispatch(fetchMarsImageDataError(err.message));
+        } else {
+          dispatch(
+            fetchMarsImageDataError(
+              "Unknown Error Occured Change Sol or RoverType"
+            )
+          );
+        }
         setCurrentPage(1);
       }
     };
@@ -104,12 +114,12 @@ function MarsImagesSelectBox(props: MarsImagesSelectBoxProps) {
   return (
     <section id="mars-search-box">
       <Card
-        className="sm:max-w-[400px] w-11/12 border mx-auto my-2"
+        className="sm:max-w-[400px] border m-2 sm:mx-auto"
         shadow="sm"
         radius="sm"
       >
         <CardBody className="flex flex-col gap-2">
-          <div className="border rounded-2xl  p-4  bg-slate-50 relative">
+          <div className="border rounded-2xl  p-4  bg-red-50 relative">
             <span className="absolute right-0 top-1">
               <Popover placement="bottom" showArrow>
                 <PopoverTrigger>
@@ -119,14 +129,29 @@ function MarsImagesSelectBox(props: MarsImagesSelectBoxProps) {
                 </PopoverTrigger>
                 <PopoverContent>
                   <div className="w-48 p-2 flex flex-col gap-2 font-bold py-4 text-gray-500">
-                    <p>Name: {data.photos[0].rover.name}</p>
-                    <p>Landing date: {data.photos[0].rover.landing_date}</p>
-                    <p>Launch date: {data.photos[0].rover.launch_date}</p>
-                    <p className="capitalize">
-                      Status: {data.photos[0].rover.status}
+                    <p>
+                      <strong>Name:</strong> {data.photos[0].rover.name}
                     </p>
-                    <p>Max sol: {data.photos[0].rover.max_sol}</p>
-                    <p>Total Photos: {data.photos[0].rover.total_photos}</p>
+                    <p>
+                      <strong>Landing date:</strong>
+                      {data.photos[0].rover.landing_date}
+                    </p>
+                    <p>
+                      <strong>Launch data:</strong>
+                      {data.photos[0].rover.launch_date}
+                    </p>
+                    <p className="capitalize">
+                      <strong>Status:</strong>
+                      {data.photos[0].rover.status}
+                    </p>
+                    <p>
+                      <strong>Max sol:</strong>
+                      {data.photos[0].rover.max_sol}
+                    </p>
+                    <p>
+                      <strong>Total Photos:</strong>
+                      {data.photos[0].rover.total_photos}
+                    </p>
                   </div>
                 </PopoverContent>
               </Popover>
@@ -136,7 +161,7 @@ function MarsImagesSelectBox(props: MarsImagesSelectBoxProps) {
               label="Choose Rover"
               onValueChange={setRoverType}
             >
-              <div className="flex items-center gap-6 relative">
+              <div className="flex items-center justify-center gap-6 mt-2 relative">
                 <Radio value="curiosity">Curiosity </Radio>
 
                 <Radio value="perseverance">Perseverance</Radio>
@@ -144,7 +169,7 @@ function MarsImagesSelectBox(props: MarsImagesSelectBoxProps) {
             </RadioGroup>
           </div>
 
-          <div className="flex justify-between h-20 items-center border p-2 bg-slate-50">
+          <div className="flex justify-between h-20 items-center border px-4 py-12 bg-red-50">
             <div className="w-1/2 ">
               <Switch
                 isSelected={isLatest}
