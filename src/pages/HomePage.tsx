@@ -11,13 +11,13 @@ function HomePage() {
   return (
     <>
       <NavigationBar />
-      <main className="sm:w-11/12 mx-auto py-6 flex flex-col gap-10 ">
+      <main className="sm:w-11/12 mx-auto py-6 flex flex-col gap-6 ">
         <Hero />
         <Divider />
         <Apod />
         <Divider />
-        <section className="w-full bg-[#F6F6FF] flex flex-col rounded-lg p-4">
-          <h1 className=" font-KronaOne  text-center my-4 uppercase tracking-wide">
+        <section className="w-full bg-[#F6F6FF] flex flex-col rounded-lg p-4 shadow-lg">
+          <h1 className=" font-KronaOne  text-center my-4 uppercase tracking-wide ">
             Explore Mars Images
           </h1>
           <Divider />
@@ -34,7 +34,7 @@ function HomePage() {
             })}
           </div>
 
-          <Button className="bg-white font-bold border-2 rounded-lg sm:w-1/6 w-1/3 mx-auto">
+          <Button className="bg-white font-bold border-2 rounded-full sm:w-1/6 w-1/3 mx-auto btn-gradient text-white  py-2 px-4  transition duration-300">
             <Link to={"/mars"}>Explore More</Link>
           </Button>
         </section>

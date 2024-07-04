@@ -59,7 +59,7 @@ function Apod() {
     content = null;
   } else if (data) {
     content = (
-      <section className="w-full sm:min-h-96 bg-[#353564] rounded-lg grid sm:grid-cols-2 grid-cols-1 gap-8 sm:px-4 px-2 py-6">
+      <section className="w-full sm:min-h-96 bg-[#353564] rounded-lg grid sm:grid-cols-2 grid-cols-1 gap-8 sm:px-4 px-2 py-6 shadow-lg">
         <div className="col-span-1 relative ">
           {data.media_type === "video" ? (
             <div className="w-full mx-auto h-96 sm:h-auto">
@@ -85,11 +85,11 @@ function Apod() {
           )}
         </div>
         <div className="col-span-1 text-white">
-          <div className="flex flex-col gap-4 h-full justify-evenly">
-            <h1 className="sm:text-2xl text-xl text-center leading-relaxed uppercase font-KronaOne tracking-wide">
+          <div className="flex flex-col gap-4 mt-10">
+            <h1 className="leading-relaxed  font-KronaOne tracking-wide">
               {data.title}
             </h1>
-            <p className="tracking-wide text-gray-200 leading-relaxed text-center">
+            <p className="tracking-wide text-gray-200 leading-relaxed ">
               {data.explanation}
             </p>
             <div className="my-4 flex justify-between px-4">
@@ -106,7 +106,14 @@ function Apod() {
     );
   }
 
-  return <>{content}</>;
+  return (
+    <>
+      <h1 className="text-white font-KronaOne uppercase leading-relaxed tracking-wide sm:text-xl sm:w-2/3 w-full text-sm text-center shadow-lg mx-auto bg-[#353564] p-2 rounded-full">
+        Astronomy Picture of the day.(APOD)
+      </h1>
+      {content}
+    </>
+  );
 }
 
 export default Apod;

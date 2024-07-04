@@ -51,7 +51,6 @@ function NavigationBar() {
       isBordered={true}
       isBlurred={true}
       onMenuOpenChange={setIsMenuOpen}
-      disableAnimation
       isMenuOpen={isMenuOpen}
       maxWidth="xl"
       className="sm:py-4 py-2 bg-[#FFF6F6]"
@@ -66,13 +65,13 @@ function NavigationBar() {
         </NavbarBrand>
       </NavbarContent>
       <NavbarContent justify="end" className="sm:flex hidden">
-        <div className="flex gap-6 items-center bg-white rounded-full shadow-sm px-8 py-2">
+        <div className="flex gap-6 items-center rounded-full px-8 py-2 btn-gradient transition duration-300 shadow-lg">
           {pages.map((page) => {
             return (
               <NavbarItem key={page.name}>
                 <Link
                   to={page.path}
-                  className={`capitalize text-lg tracking-widest text-[#353564] transition-all  ${
+                  className={`capitalize text-lg tracking-widest text-white transition-all  ${
                     activeLink === page.name && "text-[#353564] font-bold"
                   }`}
                 >
@@ -94,12 +93,12 @@ function NavigationBar() {
       </NavbarContent>
 
       <NavbarMenu>
-        <NavbarMenuItem className="bg-white shadow-md py-4 rounded-lg w-1/2 mx-auto mt-6">
+        <NavbarMenuItem className="shadow-md py-4 rounded-lg w-full gradient-1 mx-auto mt-6">
           {pages.map((page) => {
             return (
               <Link
-                className={`w-full flex text-sm justify-center items-center tracking-widest capitalize my-4 text-[#353564] ${
-                  activeLink === page.name && "text-[#353564] font-bold"
+                className={`w-full flex justify-center items-center tracking-widest capitalize my-4 text-white ${
+                  activeLink === page.name && "text-2xl font-bold"
                 }`}
                 key={page.name}
                 to={page.path}

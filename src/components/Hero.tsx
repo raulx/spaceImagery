@@ -53,7 +53,7 @@ export default function Hero() {
     },
   ];
   return (
-    <section className="w-full bg-[#F6F6FF] rounded-lg grid sm:grid-cols-2 grid-cols-1 gap-4 min-h-96 shadow">
+    <section className="w-full bg-[#F6F6FF] rounded-lg grid sm:grid-cols-2 grid-cols-1 gap-4 min-h-96 shadow-lg">
       <div className="flex flex-col sm:order-1 order-2  py-4 text-center gap-10 justify-center border-r-1">
         <h1 className="font-KronaOne sm:text-xl sm:mt-0 mt-4 tracking-widest text-gray-700 font-bold uppercase">
           Explore the space with nasa
@@ -63,7 +63,7 @@ export default function Hero() {
           different missions, search any topic and get media content .
         </p>
 
-        <Button className="w-1/5 mx-auto  bg-white border font-bold">
+        <Button className="sm:w-1/5 mx-auto  bg-white border font-bold btn-gradient text-white py-2 px-4 rounded-full transition duration-300">
           <Link to={"/gallery"}>Explore</Link>
         </Button>
       </div>

@@ -3,3 +3,19 @@
 @tailwind utilities;
 
 
+.btn-gradient {
+    background: linear-gradient(45deg, #ff6ec4, #7873f5);
+  }
+  .btn-gradient:hover {
+    background: linear-gradient(45deg, #7873f5, #ff6ec4);
+  }
+
+  .gradient-1 {
+    background: linear-gradient(45deg, #ff6ec4, #7873f5);
+  }
+  .gradient-2 {
+    background: linear-gradient(45deg, #6ee7b7, #3b82f6);
+  }
+  .gradient-3 {
+    background: linear-gradient(45deg, #f59e0b, #ef4444);
+  }
