@@ -41,7 +41,9 @@ function MarsImagesPagination(props: MarsImagePaginationProps) {
           photos = res.data.latest_photos;
         } else {
           if (res.data.photos.length === 0) {
-            throw new Error("Data is empty");
+            throw new Error(
+              `No Photos Were taken by rover ${roverType} on sol ${sol}`
+            );
           } else {
             photos = res.data.photos;
           }
@@ -49,7 +51,15 @@ function MarsImagesPagination(props: MarsImagePaginationProps) {
 
         dispatch(fetchMarsImageDataSuccess({ photos: photos }));
       } catch (err) {
-        dispatch(fetchMarsImageDataError());
+        if (err instanceof Error) {
+          dispatch(fetchMarsImageDataError(err.message));
+        } else {
+          dispatch(
+            fetchMarsImageDataError(
+              "Unknown Error Occured Change Sol or RoverType"
+            )
+          );
+        }
       }
     };
     fetchData();
