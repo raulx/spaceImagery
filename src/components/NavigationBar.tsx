@@ -53,12 +53,11 @@ function NavigationBar() {
       onMenuOpenChange={setIsMenuOpen}
       isMenuOpen={isMenuOpen}
       maxWidth="xl"
-      className="sm:py-4 py-2 bg-[#FFF6F6]"
+      className="sm:py-4 py-2 bg-red-50"
     >
       <NavbarContent className="hidden sm:block">
         <NavbarBrand>
           <Logo />
-
           <span className="font-KronaOne text-sm font-bold uppercase tracking-widest mx-6 p-4 bg-white rounded-full">
             Space Imagery
           </span>

@@ -108,7 +108,7 @@ function Apod() {
 
   return (
     <>
-      <h1 className="text-white font-KronaOne uppercase leading-relaxed tracking-wide sm:text-xl sm:w-2/3 w-full text-sm text-center shadow-lg mx-auto bg-[#353564] p-2 rounded-full">
+      <h1 className="text-white font-KronaOne uppercase leading-relaxed tracking-wide sm:text-xl sm:w-2/3 w-full text-xs text-center shadow-lg mx-auto bg-[#353564] p-2 rounded-full">
         Astronomy Picture of the day.(APOD)
       </h1>
       {content}
