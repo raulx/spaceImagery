@@ -161,7 +161,7 @@ function MarsImagesSelectBox(props: MarsImagesSelectBoxProps) {
               label="Choose Rover"
               onValueChange={setRoverType}
             >
-              <div className="flex items-center justify-center gap-6 mt-2 relative">
+              <div className="flex items-center justify-around gap-6 mt-2 relative">
                 <Radio value="curiosity">Curiosity </Radio>
 
                 <Radio value="perseverance">Perseverance</Radio>

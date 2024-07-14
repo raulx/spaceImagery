@@ -24,7 +24,19 @@ function MediaSearchBox() {
       const res = await axios.get(url);
       if (res.data.collection.items.length === 0) {
         dispatch(
-          fetchQueryDataError(`No Data Found for query:${data.searchText}`)
+          fetchQueryDataError(
+            <>
+              <p className="text-6xl text-center font-bold text-gray-400 my-2">
+                Oops.
+              </p>
+              <p className="m-2">
+                No Data Found for query :
+                <span className="font-extrabold text-3xl text-red-800">
+                  {data.searchText}
+                </span>
+              </p>
+            </>
+          )
         );
       } else {
         dispatch(fetchQueryDataSuccess(res.data.collection));

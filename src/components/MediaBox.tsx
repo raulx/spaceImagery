@@ -68,15 +68,16 @@ function MediaBox() {
       <>
         {metadata.total_hits > 0 ? (
           <>
-            <div className="py-4 flex justify-center items-center ">
+            <div className="flex rounded-lg bg-red-50 w-[400px] mx-auto border my-2 px-2 py-4 justify-center items-center ">
               <RadioGroup
                 label="Select Media Type"
                 value={mediaType}
+                className="gap-2"
                 orientation="horizontal"
                 onValueChange={setmediaType}
               >
                 {typesOfMedia.map((media) => (
-                  <Radio key={media.key} value={media.key}>
+                  <Radio key={media.key} value={media.key} className="mx-1">
                     {media.value}
                   </Radio>
                 ))}
@@ -108,7 +109,9 @@ function MediaBox() {
           </>
         ) : (
           <div className="flex justify-center items-center min-h-96">
-            <h1 className="text-2xl font-bold">{errorMessage}</h1>
+            <h1 className="text-2xl font-bold">
+              {errorMessage || <>Search The NASA Database.</>}
+            </h1>
           </div>
         )}
       </>

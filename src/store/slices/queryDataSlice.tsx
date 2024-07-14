@@ -43,7 +43,7 @@ const initialState: queryData = {
   links: [{ rel: "", prompt: "", href: "" }],
   isLoading: false,
   isError: false,
-  errorMessage: "Search The Database",
+  errorMessage: "",
 };
 
 const queryDataSlice = createSlice({
