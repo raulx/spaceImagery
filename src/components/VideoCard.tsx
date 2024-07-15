@@ -24,22 +24,51 @@ const quality: QualityType = {
 
 export function VideoCard(props: AssetDataProp) {
   const { d } = props;
+
   const [mediaLink, setMediaLink] = useState<string>("");
+
   const [videoLoading, setVideoLoading] = useState(false);
+
   const [allMediaLinks, setAllMediaLinks] = useState<string[]>([]);
+
+  const [allVideoQualities, setAllVideoQualities] = useState<string[]>([]);
 
   const mediaType = d.data[0]?.media_type;
 
   const handleClick = async () => {
     setVideoLoading(true);
+
     const res = await axios.get(d.href);
     let newLink;
+
     if (mediaType === "video") {
       // Find the first .mp4 link
       const videoLinks = res.data.filter((file: string) =>
         file.endsWith(".mp4")
       );
+      // taking out different quality of videos and storing them in a state in a sorted order.
+      const videoQualities = videoLinks.map((link: string) => {
+        const part = link.split("~"); // ["https://videoLink.com","large.mp4"]
+        //get the last item and split out the qualityType
+        const part2 = part[part.length - 1].split("."); // [large,.mp4]
+        const part3 = part2[0];
+
+        const finalPart = isQualityKey(part3) ? quality[part3] : undefined;
+
+        return finalPart;
+      });
+
+      const qualityOrder = ["1080p", "720p", "480p", "360p", "240p", "144p"];
+
+      videoQualities.sort(
+        (a: string, b: string) =>
+          qualityOrder.indexOf(a) - qualityOrder.indexOf(b)
+      );
+
+      setAllVideoQualities(videoQualities);
+
       setAllMediaLinks(videoLinks);
+
       newLink = res.data.find((link: string) => link.endsWith(".mp4"));
     } else if (mediaType === "audio") {
       //Find the first .mp3 link
@@ -97,16 +126,8 @@ export function VideoCard(props: AssetDataProp) {
                   onChange={handleSelectionChange}
                   className="p-2 border rounded-md"
                 >
-                  {allMediaLinks.map((link) => {
-                    const part = link.split("~");
-                    const part2 = part[part.length - 1].split(".");
-                    const part3 = part2[0];
-
-                    const finalPart = isQualityKey(part3)
-                      ? quality[part3]
-                      : undefined;
-
-                    return <option key={finalPart}>{finalPart}</option>;
+                  {allVideoQualities.map((link) => {
+                    return <option key={link}>{link}</option>;
                   })}
                 </select>
               </div>
