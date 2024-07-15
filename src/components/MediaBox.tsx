@@ -68,7 +68,7 @@ function MediaBox() {
       <>
         {metadata.total_hits > 0 ? (
           <>
-            <div className="flex rounded-lg bg-red-50 w-[400px] mx-auto border my-2 px-2 py-4 justify-center items-center ">
+            <div className="flex rounded-lg bg-red-50 sm:w-[400px] w-11/12 mx-auto border my-2 px-2 py-4 justify-center items-center ">
               <RadioGroup
                 label="Select Media Type"
                 value={mediaType}
@@ -77,7 +77,7 @@ function MediaBox() {
                 onValueChange={setmediaType}
               >
                 {typesOfMedia.map((media) => (
-                  <Radio key={media.key} value={media.key} className="mx-1">
+                  <Radio key={media.key} value={media.key} className="sm:mx-1">
                     {media.value}
                   </Radio>
                 ))}
