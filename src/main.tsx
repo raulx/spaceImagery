@@ -7,6 +7,7 @@ import store from "./store/store.tsx";
 import { NextUIProvider } from "@nextui-org/react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Spinner } from "@nextui-org/react";
+import NotFound from "./components/NotFound.tsx";
 
 const App = lazy(() => import("./App.tsx"));
 const HomePage = lazy(() => import("./pages/HomePage.tsx"));
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
         <Error />
       </Suspense>
     ),
+  },
+  {
+    path: "*",
+    element: <NotFound />,
   },
 ]);
 

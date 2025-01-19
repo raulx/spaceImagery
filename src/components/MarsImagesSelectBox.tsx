@@ -80,7 +80,7 @@ function MarsImagesSelectBox(props: MarsImagesSelectBoxProps) {
         }
         const res = await axios.get(requestUrl);
         let photos;
-
+        console.log(res);
         if (res.data.latest_photos) {
           photos = res.data.latest_photos;
         } else {
@@ -143,14 +143,6 @@ function MarsImagesSelectBox(props: MarsImagesSelectBoxProps) {
                     <p className="capitalize">
                       <strong>Status:</strong>
                       {data.photos[0].rover.status}
-                    </p>
-                    <p>
-                      <strong>Max sol:</strong>
-                      {data.photos[0].rover.max_sol}
-                    </p>
-                    <p>
-                      <strong>Total Photos:</strong>
-                      {data.photos[0].rover.total_photos}
                     </p>
                   </div>
                 </PopoverContent>
