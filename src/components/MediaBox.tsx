@@ -1,5 +1,5 @@
 import { Spinner, Button, RadioGroup, Radio } from "@nextui-org/react";
-import typesOfMedia from "../utils/data";
+import { typesOfMedia } from "../utils/variables";
 import {
   AppDispatch,
   RootState,
@@ -76,7 +76,7 @@ function MediaBox() {
                 orientation="horizontal"
                 onValueChange={setmediaType}
               >
-                {typesOfMedia.map((media) => (
+                {typesOfMedia.map((media: { key: string; value: string }) => (
                   <Radio key={media.key} value={media.key} className="sm:mx-1">
                     {media.value}
                   </Radio>
